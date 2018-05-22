@@ -1,5 +1,7 @@
-package corss;
+package corss.server;
 
+import corss.server.codec.SimpleDecoder;
+import corss.server.codec.SimpleEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,27 +13,33 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by lianrongfa on 2018/5/17.
  */
-public class NettyServerBootstrap {
+public class NettyServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(NettyServerBootstrap.class);
+    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     private Integer port;
     private SocketChannel socketChannel;
-    public NettyServerBootstrap(Integer port) throws Exception {
+
+    public NettyServer(Integer port) throws Exception {
         this.port = port;
         bind(port);
     }
+
     public Integer getPort() {
         return port;
     }
+
     public void setPort(Integer port) {
         this.port = port;
     }
+
     public SocketChannel getSocketChannel() {
         return socketChannel;
     }
+
     public void setSocketChannel(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
+
     private void bind(int serverPort) throws Exception {
         // 连接处理group
         EventLoopGroup boss = new NioEventLoopGroup();
@@ -44,7 +52,7 @@ public class NettyServerBootstrap {
         // 保持连接数
         bootstrap.option(ChannelOption.SO_BACKLOG, 1024 * 1024);
         // 有数据立即发送
-        bootstrap.option(ChannelOption.TCP_NODELAY, true);
+        bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         // 保持连接
         bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
         // 处理新连接
@@ -53,10 +61,11 @@ public class NettyServerBootstrap {
             protected void initChannel(SocketChannel sc) throws Exception {
                 // 增加任务处理
                 ChannelPipeline p = sc.pipeline();
-                p.addLast(new MessageDecoder(), new MessageEncoder(), new NettyServerHandler());
+                p.addLast(
+                        new SimpleDecoder(),new SimpleEncoder(),
+                        new ServerHandler());
             }
         });
-
         ChannelFuture f = bootstrap.bind(serverPort).sync();
         if (f.isSuccess()) {
             logger.info("long connection started success");

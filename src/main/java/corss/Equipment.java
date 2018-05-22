@@ -5,10 +5,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.channels.Channel;
 
-public class User {
+public class Equipment {
 
 	private Channel channel;
-	private String name;
+	private String id;
 	private InetSocketAddress address;
     private InetAddress clientUDPAddresse;
     private Integer clientUDPPort;
@@ -17,18 +17,17 @@ public class User {
     
     
     public String getUDPId(){
-    	
     	return clientUDPAddresse+","+clientUDPPort;
     }
 	
-	public User(String name, Channel channel){
+	public Equipment(String id, Channel channel){
 		this.channel = channel;
-		this.name = name;
+		this.id = id;
 		address = null;
 	}
 	
-	public String getName(){
-		return name;
+	public String getId(){
+		return id;
 	}
 	
 	public Channel getChannel(){

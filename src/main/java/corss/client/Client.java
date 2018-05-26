@@ -2,12 +2,14 @@ package corss.client;
 
 import corss.server.codec.SimpleDecoder;
 import corss.server.codec.SimpleEncoder;
+import corss.server.codec.UARTDecoder;
 import corss.server.protocol.SimpleProduct;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.bytes.ByteArrayEncoder;
 
 /**
  * Created by lianrongfa on 2018/5/17.
@@ -33,8 +35,8 @@ public class Client {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 socketChannel.pipeline().addLast(
-                        //new StringDecoder(Charset.forName("utf-8")),//new StringEncoder(Charset.forName("utf-8")),
-                        new SimpleDecoder(),new SimpleEncoder(),
+                        new UARTDecoder(),
+                        new ByteArrayEncoder(),
                         new ClientHandler());
             }
         });
@@ -45,10 +47,10 @@ public class Client {
         }
     }
 
-    public void sendMessage(String s){
-        SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes());
+    public void sendMessage(byte[] s){
+        //SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes());
 
-        socketChannel.writeAndFlush(simpleProduct);
+        socketChannel.writeAndFlush(s);
     }
 
     public int getPort() {

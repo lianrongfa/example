@@ -13,8 +13,6 @@ import java.util.Properties;
  */
 public class ConfigContext {
 
-    private final static ConfigContext configContext=new ConfigContext();
-
     private static Properties properties;
 
     private static ProtocolConfig protocolConfig=new ProtocolConfig();
@@ -32,6 +30,8 @@ public class ConfigContext {
 
     }
 
+    private final static ConfigContext configContext=new ConfigContext();
+
     public static ConfigContext getInstace(){
         return configContext;
     }
@@ -45,6 +45,9 @@ public class ConfigContext {
         load();
     }
 
+    /**
+     * 读取配置文件
+     */
     private void load(){
         //端口
         serverPort=Integer.valueOf(properties.getProperty("server.port","8080"));

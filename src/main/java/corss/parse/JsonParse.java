@@ -36,7 +36,6 @@ public class JsonParse<T> extends AbstractParse<T,String>{
                     break;
                 }
             }
-
             return  (T)o;
         }
         return null;

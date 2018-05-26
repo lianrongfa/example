@@ -8,7 +8,7 @@ public class ConstantValue {
     /**
      * 消息头标识位
      */
-    public static final int HEAD_DATA = 0x18;
+    public static final int HEAD_DATA = 0xCAFF;
 
     /**
      * 协议最消息长度

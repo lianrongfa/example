@@ -57,8 +57,9 @@ public class SimpleDecoder extends ByteToMessageDecoder {
             out.add(simpleProduct);
 
         }else{
-            System.out.println("信息包不足!");
-            System.out.println(buffer.toString());
+            String s="协议错误!";
+            SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes());
+            ctx.writeAndFlush(simpleProduct);
         }
     }
 }

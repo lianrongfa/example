@@ -1,12 +1,13 @@
 package corss.server;
 
-import corss.server.codec.SimpleDecoder;
 import corss.server.codec.SimpleEncoder;
+import corss.server.codec.UARTDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +42,10 @@ public class NettyServer {
     }
 
     private void bind(int serverPort) throws Exception {
-        // 连接处理group
         EventLoopGroup boss = new NioEventLoopGroup();
-        // 事件处理group
         EventLoopGroup worker = new NioEventLoopGroup();
+
         ServerBootstrap bootstrap = new ServerBootstrap();
-        // 绑定处理group
         bootstrap.group(boss, worker);
         bootstrap.channel(NioServerSocketChannel.class);
         // 保持连接数
@@ -62,10 +61,12 @@ public class NettyServer {
                 // 增加任务处理
                 ChannelPipeline p = sc.pipeline();
                 p.addLast(
-                        new SimpleDecoder(),new SimpleEncoder(),
+                        new UARTDecoder(),
+                        new ByteArrayEncoder(),
                         new ServerHandler());
-            }
-        });
+            }}
+        );
+
         ChannelFuture f = bootstrap.bind(serverPort).sync();
         if (f.isSuccess()) {
             logger.info("long connection started success");

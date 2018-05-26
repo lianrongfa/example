@@ -1,5 +1,7 @@
 package corss.clientn;
 
+import io.netty.util.AsciiString;
+
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
@@ -11,7 +13,17 @@ import java.util.Properties;
 public class PropertiesTest {
     public static void main(String[] args) {
 
-        test();
+        String s="E";
+
+        Integer integer = Integer.valueOf(s,16);
+
+        try {
+
+            byte[] bytes = s.getBytes("US-ASCII");
+            System.out.println();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
     }
 

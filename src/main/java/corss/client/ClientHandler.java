@@ -12,7 +12,6 @@ public class ClientHandler extends SimpleChannelInboundHandler {
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
-        SimpleProduct product = (SimpleProduct) o;
-        System.out.println("从服务端接收:"+new String(product.getContent()));
+        System.out.println("从服务端接收:"+o);
     }
 }

@@ -1,31 +1,32 @@
 package corss.server.protocol;
 
-import org.junit.Test;
-
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.concurrent.*;
 
 /**
  * Created by lianrongfa on 2018/5/21.
  */
 public abstract class AbstractUART implements UART {
 
-    protected Calendar calendar=Calendar.getInstance();
-    protected SimpleDateFormat sdyyyyMMddHHmmss=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    protected SimpleDateFormat sdyyyyMMddHHmm=new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    //即为20xx年
+    protected static final String prefix="20";
+
+    protected SimpleDateFormat yyyyMMddHHmmss =new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
      * 协议最小长度
      */
-    public final static int MIN_LENGTH = 3;
+    public final static int MIN_LENGTH = 2;
     /**
      * 协议最大长度
      */
-    public final static int MAX_LENGTH = 55;
+    public final static int MAX_LENGTH = 98;
+
+    //类日期 格式为：18526 即为2018年5月26日
+    private String datePrefix;
 
     /**
      * 内容,具体查阅文档《道口作业记录仪与数据中心通信数据协议》
@@ -33,6 +34,14 @@ public abstract class AbstractUART implements UART {
     protected byte [] data;
 
     public AbstractUART() {
+    }
+
+    public String getDatePrefix() {
+        return datePrefix;
+    }
+
+    public void setDatePrefix(String datePrefix) {
+        this.datePrefix = datePrefix;
     }
 
     protected AbstractUART(byte[] data) {
@@ -57,7 +66,11 @@ public abstract class AbstractUART implements UART {
 
     public String getMarkString(){
         if (data.length > MIN_LENGTH) {
-            return data[0]+""+data[1];
+            try {
+                return new String(new byte[]{data[0],data[1]},"US-ASCII");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -86,8 +99,9 @@ public abstract class AbstractUART implements UART {
      * @param bytes byte数组
      * @return 类型 2018-5-23 15:21:03
      */
+    @Deprecated
     protected Date buildDateTimes(byte[] bytes) {
-        StringBuilder sb = new StringBuilder("20");
+        /*StringBuilder sb = new StringBuilder("20");
         //2018-05-13 14:30:11
         sb.append(bytes[0]);
         sb.append("-");
@@ -103,10 +117,10 @@ public abstract class AbstractUART implements UART {
         sb.append(bytes[5]);
 
         try {
-            return this.sdyyyyMMddHHmmss.parse(sb.toString());
+            return this.yyyyMMddHHmmss.parse(sb.toString());
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 
@@ -115,8 +129,9 @@ public abstract class AbstractUART implements UART {
      * @param bytes byte数组
      * @return 类型 2018-5-23 15:21
      */
+    @Deprecated
     protected Date buildDateTime(byte[] bytes) {
-        StringBuilder sb = new StringBuilder("20");
+        /*StringBuilder sb = new StringBuilder("20");
         sb.append(bytes[0]);
         sb.append("-");
         sb.append(bytes[1]);
@@ -132,7 +147,7 @@ public abstract class AbstractUART implements UART {
             return this.sdyyyyMMddHHmm.parse(sb.toString());
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 
@@ -140,6 +155,7 @@ public abstract class AbstractUART implements UART {
      * @param bytes byte数组
      * @return 类型 15:21:01
      */
+    @Deprecated
     protected Date buildTime(byte[] bytes) {
         Calendar calendar= Calendar.getInstance();
         int year=calendar.get(Calendar.YEAR);
@@ -153,10 +169,35 @@ public abstract class AbstractUART implements UART {
         sb.append(":");
         sb.append(bytes[2]);
         try {
-            return this.sdyyyyMMddHHmmss.parse(sb.toString());
+            return this.yyyyMMddHHmmss.parse(sb.toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    /**
+     * @param dateTime 日期时间 类型为20180526152108 即为2018年5月26日15:21:08
+     * @return
+     */
+    protected Date buildDateTime(String dateTime) {
+        if(dateTime!=null){
+            try {
+                return this.yyyyMMddHHmmss.parse(dateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param time 时间 格式为：152101 即为15点21分01秒
+     * @return
+     */
+
+    protected Date buildTime(String time) {
+        return null;
+    }
+
 }

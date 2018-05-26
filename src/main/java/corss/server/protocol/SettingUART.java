@@ -36,7 +36,7 @@ public class SettingUART extends AbstractUART {
     /**
      * 出场按钮 0启用 1停止
      */
-    private byte marchOut;
+    private byte marchOut;//有错
 
     /**
      * 自动预警 0启用 1停止

@@ -4,19 +4,19 @@ import corss.configuration.ConfigContext;
 import corss.configuration.ProtocolConfig;
 import corss.server.protocol.AbstractUART;
 
+import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * Created by lianrongfa on 2018/5/22.
- *  记录调取(共14B)
+ *  记录调取(共14B) 完成
  */
 public class RecordUART extends AbstractUART {
-
-
     //识别码
-    private final byte mark=51;
+    private final byte mark=(byte)98;
     //调取类型
     private byte type;
 
@@ -88,20 +88,27 @@ public class RecordUART extends AbstractUART {
         System.out.println();
 
     }
-    
+
     private byte [] getTimeByte(Date date){
         if(date!=null){
-            byte[] bytes = new byte[5];
+            /*byte[] bytes = new byte[6];
             calendar.setTime(date);
             int year = calendar.get(Calendar.YEAR);
-            if(year>1000){
-                bytes[0] = (byte) (year % 100);
-            }
+            bytes[0] = Byte.parseByte((byte) (year % 100)+"");
             bytes[1]=(byte)(calendar.get(Calendar.MONTH)+1);
             bytes[2]=(byte)(calendar.get(Calendar.DAY_OF_MONTH));
             bytes[3]=(byte)(calendar.get(Calendar.HOUR_OF_DAY));
             bytes[4]=(byte)(calendar.get(Calendar.MINUTE));
-            return bytes;
+            bytes[5]=(byte)(calendar.get(Calendar.SECOND));*/
+            String s = this.yyyyMMddHHmmss.format(date);
+            if(s.length()==14){
+                s=s.substring(2);
+            }
+            try {
+                return s.getBytes("US-ASCII");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

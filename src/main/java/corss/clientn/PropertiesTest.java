@@ -13,9 +13,16 @@ import java.util.Properties;
 public class PropertiesTest {
     public static void main(String[] args) {
 
-        String s="E";
+       char a=' ';
 
-        Integer integer = Integer.valueOf(s,16);
+       System.out.println((byte)a);
+
+    }
+
+    private static void tset2() {
+        String s="180522052441";
+
+        //Integer integer = Integer.valueOf(s,16);
 
         try {
 
@@ -24,7 +31,6 @@ public class PropertiesTest {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
     }
 
     private static void test() {

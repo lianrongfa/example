@@ -17,14 +17,14 @@ public class ProtocolFactory {
 
     static {
         //可用配置文件方式
-        map.put((byte) 10,FaultUART.class);
-        map.put((byte) 11,FaultUART.class);
-        map.put((byte) 12,FaultUART.class);
-        map.put((byte) 13,JobHistoryUART.class);
+        map.put((byte) 65,FaultUART.class);
+        map.put((byte) 66,FaultUART.class);
+        map.put((byte) 67,FaultUART.class);
+        map.put((byte) 68,JobHistoryUART.class);
         map.put((byte) 20,ReplyUART.class);
-        map.put((byte) 30,SettingUART.class);
-        map.put((byte) 50,SettingUART.class);
-        map.put((byte) 51,RecordUART.class);
+        map.put((byte) 69,SettingUART.class);
+        map.put((byte) 97,SettingUART.class);
+        map.put((byte) 98,RecordUART.class);
     }
 
     public static UART createUART(byte mark,byte [] data){

@@ -10,10 +10,6 @@ import java.util.Date;
  * 详细作业记录上传(共55B)
  */
 public class JobHistoryUART extends AbstractUART {
-    /**
-     * 日期
-     */
-    private Date date;
 
     /**
      * 上/下预告
@@ -72,7 +68,7 @@ public class JobHistoryUART extends AbstractUART {
      */
     private Date endBOn;
     /**
-     * 上预
+     * 预告
      */
     private byte advanceState;
     /**
@@ -81,26 +77,22 @@ public class JobHistoryUART extends AbstractUART {
     private byte marchOutState;
 
     /**
-     * 上/下报
+     * 报警
      */
     private byte alertState;
 
     /**
-     * 关栏杆
+     * 关杆
      */
     private byte offState;
     /**
-     * 上/下到
+     * 到达
      */
     private byte reachState;
     /**
-     * 开栏杆
+     * 开杆
      */
     private byte onState;
-    /**
-     * 预警
-     */
-    private byte earlyWarning;
 
     @Override
     public void parse() {
@@ -111,9 +103,6 @@ public class JobHistoryUART extends AbstractUART {
 
     }
 
-    public Date getDate() {
-        return date;
-    }
 
     public Date getAdvance() {
         return advance;
@@ -195,7 +184,4 @@ public class JobHistoryUART extends AbstractUART {
         return onState;
     }
 
-    public byte getEarlyWarning() {
-        return earlyWarning;
-    }
 }

@@ -5,6 +5,7 @@ import corss.clientn.PropertiesTest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -18,10 +19,9 @@ public class ConfigContext {
     private static ProtocolConfig protocolConfig=new ProtocolConfig();
 
     static {
-        URL url = PropertiesTest.class.getClassLoader().getResource("configuration.properties");
-        try {
-            FileInputStream inputStream = new FileInputStream(new File(url.getFile()));
 
+        try {
+            InputStream inputStream = PropertiesTest.class.getClassLoader().getResourceAsStream("configuration.properties");
             properties = new Properties();
             properties.load(inputStream);
         } catch (IOException e) {

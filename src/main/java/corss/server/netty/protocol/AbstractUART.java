@@ -65,6 +65,14 @@ public abstract class AbstractUART implements UART {
         data[1]=this.type;
     }
 
+    public byte getType() {
+        return type;
+    }
+
+    public void setType(byte type) {
+        this.type = type;
+    }
+
     public String getEquipmentId() {
         return equipmentId;
     }

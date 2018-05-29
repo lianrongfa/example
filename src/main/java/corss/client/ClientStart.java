@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class ClientStart {
     public static void main(String[] args){
 
-        //socketTest();
+        socketTest("{'haha':'1'}",1);
         //System.out.println(httpRequest("http://127.0.0.1:8089","POST","{'hi':'1'}"));
         //nettyTest();
     }

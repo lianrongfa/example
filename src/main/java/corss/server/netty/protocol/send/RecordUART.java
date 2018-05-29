@@ -22,6 +22,7 @@ public class RecordUART extends AbstractUART {
     private Date endTime;
 
     public RecordUART() {
+        this.mark=98;
     }
 
     /**
@@ -46,7 +47,20 @@ public class RecordUART extends AbstractUART {
 
     @Override
     public void parse() {
+        ProtocolConfig protocolConfig = ConfigContext.getInstace().getProtocolConfig();
+        int size = protocolConfig.getReceiveMap().get(mark);
+        this.setData(new byte[size]);
 
+        //填充byte数组
+        data[0]=this.mark;
+        data[1]=this.type;
+
+        int idx=2;
+
+        byte[] startBytes = getTimeByte(this.startTime);
+        byte[] endTimeBytes = getTimeByte(this.endTime);
+
+        int i = insertArr(endTimeBytes, insertArr(startBytes, idx));
     }
 
     public Date getStartTime() {
@@ -64,6 +78,7 @@ public class RecordUART extends AbstractUART {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
 
     /**
      * 调取种类

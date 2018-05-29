@@ -1,6 +1,6 @@
-package corss.server.protocol.receive;
+package corss.server.netty.protocol.receive;
 
-import corss.server.protocol.AbstractUART;
+import corss.server.netty.protocol.AbstractUART;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;

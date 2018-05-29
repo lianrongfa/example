@@ -1,9 +1,9 @@
-package corss.server.protocol;
+package corss.server.netty.protocol;
 
-import corss.server.protocol.receive.FaultUART;
-import corss.server.protocol.receive.JobHistoryUART;
-import corss.server.protocol.send.RecordUART;
-import corss.server.protocol.receive.ReplyUART;
+import corss.server.netty.protocol.receive.FaultUART;
+import corss.server.netty.protocol.receive.JobHistoryUART;
+import corss.server.netty.protocol.send.RecordUART;
+import corss.server.netty.protocol.receive.ReplyUART;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +22,8 @@ public class ProtocolFactory {
         map.put((byte) 67,FaultUART.class);
         map.put((byte) 68,JobHistoryUART.class);
         map.put((byte) 20,ReplyUART.class);
-        map.put((byte) 69,SettingUART.class);
-        map.put((byte) 97,SettingUART.class);
+        map.put((byte) 69,RemoteSettingUART.class);
+        map.put((byte) 97,RemoteSettingUART.class);
         map.put((byte) 98,RecordUART.class);
     }
 

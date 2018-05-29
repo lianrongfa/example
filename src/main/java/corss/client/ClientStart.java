@@ -1,15 +1,11 @@
 package corss.client;
 
-import corss.parse.JsonParse;
-import corss.server.protocol.SimpleProduct;
-import sun.net.www.http.HttpClient;
+import corss.server.socket.protocol.SimpleProduct;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
 /**
@@ -20,7 +16,7 @@ public class ClientStart {
 
         //socketTest();
         //System.out.println(httpRequest("http://127.0.0.1:8089","POST","{'hi':'1'}"));
-        nettyTest();
+        //nettyTest();
     }
 
     private static void nettyTest() {
@@ -38,33 +34,27 @@ public class ClientStart {
         }
     }
 
-    private static void socketTest() {
+    /**
+     * 给中间消息服务器发送json信息
+     * @param json json信息，具体格式视type类型而定
+     * @param type 参照下文
+     */
+    private static void socketTest(String json,int type) {
         try {
             Socket socket = new Socket("127.0.0.1", 8089);
 
             OutputStream outputStream = socket.getOutputStream();
-            String ss="{'haha':'1'}";
-            SimpleProduct product = new SimpleProduct(ss.length(), ss.getBytes());
+            //String json="{'haha':'1'}";
 
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
-            dataOutputStream.writeInt(product.getHead_data());
-            dataOutputStream.writeInt(product.getContentLength());
-            dataOutputStream.write(product.getContent());
-
+            //顺序不能乱
+            dataOutputStream.writeInt(0xCAFF);//消息头
+            dataOutputStream.writeInt(type);//操作类型
+            dataOutputStream.writeInt(json.length());//消息长度
+            dataOutputStream.write(json.getBytes());//消息
 
             dataOutputStream.flush();
-
-            /*InputStream inputStream = socket.getInputStream();
-            byte[] bytes = new byte[1024];
-            int len;
-            StringBuilder sb = new StringBuilder();
-            while ((len = inputStream.read(bytes)) != -1) {
-
-                sb.append(new String(bytes, 0, len, "UTF-8"));
-            }
-            System.out.println("从服务端接收数据: " + sb);
-            inputStream.close();*/
 
             outputStream.close();
             socket.close();

@@ -1,7 +1,6 @@
-package corss.server;
+package corss.server.netty;
 
-import corss.server.codec.SimpleEncoder;
-import corss.server.codec.UARTDecoder;
+import corss.server.netty.codec.UARTDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

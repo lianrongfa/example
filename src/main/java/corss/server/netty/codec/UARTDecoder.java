@@ -1,7 +1,8 @@
-package corss.server.codec;
+package corss.server.netty.codec;
 
 import corss.configuration.ConfigContext;
-import corss.server.protocol.*;
+import corss.server.netty.protocol.*;
+import corss.server.socket.protocol.ConstantValue;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

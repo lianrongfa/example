@@ -1,11 +1,9 @@
 package corss.controller;
 
-import corss.server.NettyContainer;
-import corss.server.protocol.UART;
+import corss.server.netty.NettyContainer;
+import corss.server.netty.protocol.UART;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by lianrongfa on 2018/5/21.
@@ -37,9 +35,9 @@ public class ConnectionController implements Controller{
 
     @Override
     public void close() {
-        Object o = NettyContainer.source.get(this.id);
-        if (o != null && o instanceof Channel) {
-            Channel channel = (Channel) o;
+
+        Channel channel = NettyContainer.sourceChannels.get(this.id);
+        if (channel != null) {
             channel.close().awaitUninterruptibly();
             remove(channel);
         }
@@ -51,9 +49,6 @@ public class ConnectionController implements Controller{
         return null;
     }
 
-    public void test(){
-        System.out.println("test");
-    }
 
     private void remove(Channel channel) {
         NettyContainer.group.remove(channel);

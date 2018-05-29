@@ -1,6 +1,5 @@
 package corss.client;
 
-import corss.server.protocol.SimpleProduct;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

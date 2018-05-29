@@ -2,7 +2,7 @@ package cn.jtv.cross.cross;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import corss.server.NettyContainer;
+import corss.server.netty.NettyContainer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;

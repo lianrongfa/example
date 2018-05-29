@@ -1,4 +1,4 @@
-package corss.server.protocol;
+package corss.server.socket.protocol;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -11,10 +11,11 @@ import java.util.Arrays;
  * 自己定义的协议
  *  数据包格式
  * +——----——+——-----——+——----——+
- * |协议开始标志|  长度             |   数据       |
+ * |协议开始标志|  长度   |    类型     |   数据       |
  * +——----——+——-----——+——----——+
- * 1.协议开始标志head_data，为int类型的数据，16进制表示为0X76
+ * 1.协议开始标志head_data，为int类型的数据，16进制表示为0xCAFF
  * 2.传输数据的长度contentLength，int类型
+ * 3.操作的类型@{{@link Type}}
  * 3.要传输的数据
  * </pre>
  */
@@ -24,6 +25,11 @@ public class SimpleProduct implements Serializable{
      */
     private int head_data = ConstantValue.HEAD_DATA;
     /**
+     * 操作类型
+     */
+    private int type;
+
+    /**
      * 消息的长度
      */
     private int contentLength;
@@ -31,6 +37,7 @@ public class SimpleProduct implements Serializable{
      * 消息的内容
      */
     private byte[] content;
+
 
     /**
      * 用于初始化，SmartCarProtocol
@@ -40,9 +47,10 @@ public class SimpleProduct implements Serializable{
      * @param content
      *            协议里面，消息的数据
      */
-    public SimpleProduct(int contentLength, byte[] content) {
+    public SimpleProduct(int contentLength, byte[] content,int type) {
         this.contentLength = contentLength;
         this.content = content;
+        this.type=type;
     }
 
     public int getHead_data() {
@@ -65,9 +73,21 @@ public class SimpleProduct implements Serializable{
         this.content = content;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "SmartCarProtocol [head_data=" + head_data + ", contentLength="
-                + contentLength + ", content=" + Arrays.toString(content) + "]";
+        return "SimpleProduct{" +
+                "head_data=" + head_data +
+                ", type=" + type +
+                ", contentLength=" + contentLength +
+                ", content=" + Arrays.toString(content) +
+                '}';
     }
 }

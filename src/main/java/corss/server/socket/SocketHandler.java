@@ -1,17 +1,14 @@
-package corss.server;
+package corss.server.socket;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import corss.controller.ConnectionController;
-import corss.controller.Controller;
-import corss.controller.ProxyController;
-import corss.server.protocol.SimpleProduct;
+import corss.server.netty.NettyContainer;
+import corss.server.netty.protocol.UART;
+import corss.server.socket.protocol.SimpleProduct;
+import corss.server.socket.protocol.Type;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
-import java.net.SocketAddress;
-import java.util.Iterator;
 
 /**
  * Created by lianrongfa on 2018/5/17.
@@ -33,9 +30,23 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
         if(info instanceof SimpleProduct){
             SimpleProduct simpleProduct = (SimpleProduct) info;
-            String s=new String(simpleProduct.getContent());
-            System.out.println(s);
-            JSONObject jsonObject = JSON.parseObject(s);
+            int type = simpleProduct.getType();
+            String value=new String(simpleProduct.getContent());
+            Class clazz = Type.getClazz(type);
+
+            if(clazz!=null&&value!=null){
+                Object o = JSONObject.parseObject(value, clazz);
+                UART uart = (UART) o;
+                uart.parse();
+                byte[] data = uart.getData();
+
+                String id = uart.getIdString();
+
+                Channel channel = NettyContainer.sourceChannels.get(id);
+                if(channel!=null&&channel.isActive()){
+                    ChannelFuture channelFuture = channel.writeAndFlush(data);
+                }
+            }
         }
         System.out.println("服务端接收到：" + info);
     }

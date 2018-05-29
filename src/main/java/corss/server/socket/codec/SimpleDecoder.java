@@ -1,7 +1,7 @@
-package corss.server.codec;
+package corss.server.socket.codec;
 
-import corss.server.protocol.ConstantValue;
-import corss.server.protocol.SimpleProduct;
+import corss.server.socket.protocol.ConstantValue;
+import corss.server.socket.protocol.SimpleProduct;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -40,8 +40,8 @@ public class SimpleDecoder extends ByteToMessageDecoder {
                 }
             }
 
+            int type=buffer.readInt();
             int length=buffer.readInt();
-            //int length2=buffer.readInt();
 
             if(buffer.readableBytes()<length){
                 // 还原读指针,等待数据到齐
@@ -52,13 +52,13 @@ public class SimpleDecoder extends ByteToMessageDecoder {
             byte [] data =new byte[length];
             buffer.readBytes(data);
 
-            SimpleProduct simpleProduct = new SimpleProduct(length, data);
+            SimpleProduct simpleProduct = new SimpleProduct(length, data, type);
 
             out.add(simpleProduct);
 
         }else{
             String s="协议错误!";
-            SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes());
+            SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes(), (byte) 1);
             ctx.writeAndFlush(simpleProduct);
         }
     }

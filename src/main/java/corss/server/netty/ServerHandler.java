@@ -1,4 +1,4 @@
-package corss.server;
+package corss.server.netty;
 
 import corss.controller.ConnectionController;
 import corss.controller.Controller;

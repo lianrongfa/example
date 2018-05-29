@@ -1,9 +1,11 @@
-package corss.server.protocol;
+package corss.server.netty.protocol;
+
+import corss.configuration.ConfigContext;
+import corss.configuration.ProtocolConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -11,7 +13,7 @@ import java.util.Date;
  */
 public abstract class AbstractUART implements UART {
 
-    //即为20xx年
+    //即为20xx年,如果该软件使用到了3000年，改为30一次类推，不过应该不可能~_~
     protected static final String prefix="20";
 
     protected SimpleDateFormat yyyyMMddHHmmss =new SimpleDateFormat("yyyyMMddHHmmss");
@@ -28,6 +30,14 @@ public abstract class AbstractUART implements UART {
     //类日期 格式为：18526 即为2018年5月26日
     private String datePrefix;
 
+    //标识码
+    protected byte mark;
+
+    //操作码
+    protected byte type;
+
+    //设备id
+    protected String equipmentId;
     /**
      * 内容,具体查阅文档《道口作业记录仪与数据中心通信数据协议》
      */
@@ -36,8 +46,35 @@ public abstract class AbstractUART implements UART {
     public AbstractUART() {
     }
 
+
+    /**
+     * 用于发送协议初始化
+     * @param mark 识别码
+     * @param type 操作码
+     */
+    public AbstractUART(byte mark, byte type) {
+        this.mark = mark;
+        this.type = type;
+
+        ProtocolConfig protocolConfig = ConfigContext.getInstace().getProtocolConfig();
+        Integer size = protocolConfig.getReceiveMap().get(mark);
+        this.setData(new byte[size]);
+
+        //填充byte数组
+        data[0]=this.mark;
+        data[1]=this.type;
+    }
+
+    public String getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(String equipmentId) {
+        this.equipmentId = equipmentId;
+    }
+
     public String getDatePrefix() {
-        return datePrefix;
+        return prefix+datePrefix;
     }
 
     public void setDatePrefix(String datePrefix) {
@@ -75,6 +112,16 @@ public abstract class AbstractUART implements UART {
         return null;
     }
 
+    public static String asciiString(byte [] bytes){
+        if(bytes==null||bytes.length<1) return null;
+        try {
+            return new String(bytes,"US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -95,86 +142,6 @@ public abstract class AbstractUART implements UART {
         return null;
     }
 
-    /**
-     * @param bytes byte数组
-     * @return 类型 2018-5-23 15:21:03
-     */
-    @Deprecated
-    protected Date buildDateTimes(byte[] bytes) {
-        /*StringBuilder sb = new StringBuilder("20");
-        //2018-05-13 14:30:11
-        sb.append(bytes[0]);
-        sb.append("-");
-        sb.append(bytes[1]);
-        sb.append("-");
-        sb.append(bytes[2]);
-        sb.append(" ");
-
-        sb.append(bytes[3]);
-        sb.append(":");
-        sb.append(bytes[4]);
-        sb.append(":");
-        sb.append(bytes[5]);
-
-        try {
-            return this.yyyyMMddHHmmss.parse(sb.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
-        return null;
-    }
-
-
-    /**
-     * @param bytes byte数组
-     * @return 类型 2018-5-23 15:21
-     */
-    @Deprecated
-    protected Date buildDateTime(byte[] bytes) {
-        /*StringBuilder sb = new StringBuilder("20");
-        sb.append(bytes[0]);
-        sb.append("-");
-        sb.append(bytes[1]);
-        sb.append("-");
-        sb.append(bytes[2]);
-        sb.append(" ");
-
-        sb.append(bytes[3]);
-        sb.append(":");
-        sb.append(bytes[4]);
-
-        try {
-            return this.sdyyyyMMddHHmm.parse(sb.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
-        return null;
-    }
-
-    /**
-     * @param bytes byte数组
-     * @return 类型 15:21:01
-     */
-    @Deprecated
-    protected Date buildTime(byte[] bytes) {
-        Calendar calendar= Calendar.getInstance();
-        int year=calendar.get(Calendar.YEAR);
-        int month=calendar.get(Calendar.MONTH)+1;
-        int day=calendar.get(Calendar.DAY_OF_MONTH);
-        StringBuilder sb = new StringBuilder(year + "-" + month + "-" + day + " ");
-
-        sb.append(bytes[0]);
-        sb.append(":");
-        sb.append(bytes[1]);
-        sb.append(":");
-        sb.append(bytes[2]);
-        try {
-            return this.yyyyMMddHHmmss.parse(sb.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * @param dateTime 日期时间 类型为20180526152108 即为2018年5月26日15:21:08
@@ -191,13 +158,40 @@ public abstract class AbstractUART implements UART {
         return null;
     }
 
+
     /**
-     * @param time 时间 格式为：152101 即为15点21分01秒
+     * 将日期格式化为 byte数组
+     * @param date 日期
      * @return
      */
-
-    protected Date buildTime(String time) {
+    protected byte [] getTimeByte(Date date){
+        if(date!=null){
+            String s = this.yyyyMMddHHmmss.format(date);
+            if(s.length()==14){
+                s=s.substring(2);
+            }
+            try {
+                return s.getBytes("US-ASCII");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 
+    /**
+     * 将byte数组插入到指定下标
+     * @param bytes 插入数组
+     * @param idx 插下标
+     * @return 插入结束下标
+     */
+    protected int insertArr(byte [] bytes,int idx){
+        if (bytes!=null) {
+            for (int i=0;i<bytes.length;i++) {
+                data[i+idx]=bytes[i];
+            }
+            return idx+bytes.length;
+        }
+        return idx;
+    }
 }

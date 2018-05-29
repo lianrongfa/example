@@ -1,4 +1,4 @@
-package corss.server.protocol;
+package corss.server.netty.protocol;
 
 /**
  * Created by lianrongfa on 2018/5/22.
@@ -19,13 +19,13 @@ public interface UART {
 
     /**
      * 得到标识位，下标为0 1
-     * @return byte.length=2 ,类型为10进制整数
+     * @return byte.length=2 , ascii原型
      */
     byte [] getMark();
 
     /**
      * 得到标识位，下标为0 1
-     * @return byte.length=2 ,类型为10进制整数 String表示类型
+     * @return byte.length=2 ,ascii值
      */
     String getMarkString();
 

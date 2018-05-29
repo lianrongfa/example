@@ -1,8 +1,10 @@
-package corss.server.protocol.receive;
+package corss.server.netty.protocol.receive;
 
-import corss.server.protocol.AbstractUART;
+import corss.server.netty.protocol.AbstractUART;
 
-import java.util.Calendar;
+import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -11,6 +13,10 @@ import java.util.Date;
  */
 public class JobHistoryUART extends AbstractUART {
 
+    private static String [] fieldNames ={
+            "advance","marchOut","startAlert","endAlert","startAOff",
+            "endAOff","startBOff","endBOff","startReach","endReach",
+            "startAOn","endAOn","startBOn","endBOn"};
     /**
      * 上/下预告
      */
@@ -96,13 +102,59 @@ public class JobHistoryUART extends AbstractUART {
 
     @Override
     public void parse() {
+        int from=8,to=14,increment=6;//可做成配置的
 
+        //设置日期前缀
+        byte[] datePrefix = Arrays.copyOfRange(this.data, 2, 8);
+        setDatePrefix(asciiString(datePrefix));
 
-
-
-
+        //解析日期
+        Class clazz = this.getClass();
+        for (String fieldName : this.fieldNames) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                byte[] bytes = Arrays.copyOfRange(this.data, from, to);
+                String s = asciiString(bytes);
+                if(checkString(s)){
+                    Date date = yyyyMMddHHmmss.parse(getDatePrefix() + s);
+                    field.set(this,date);
+                }
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            from=from+increment;
+            to=to+increment;
+        }
     }
 
+    private boolean checkString(String s) {
+        if(s==null){
+            return false;
+        }
+        return !s.contains(" ");
+    }
+
+    public static void main(String[] args) {
+        byte[] bytes = {68,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x20,0x20,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
+                0x30,0x34,0x32,0x33,0x34,0x31,0x31,0x33,0x32,0x32,0x31,0x31
+                };
+
+        JobHistoryUART uart = new JobHistoryUART();
+        uart.setData(bytes);
+        uart.parse();
+        System.out.println();
+
+    }
 
     public Date getAdvance() {
         return advance;

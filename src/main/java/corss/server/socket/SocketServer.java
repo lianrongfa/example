@@ -1,7 +1,7 @@
-package corss.server;
+package corss.server.socket;
 
-import corss.server.codec.SimpleDecoder;
-import corss.server.codec.SimpleEncoder;
+import corss.server.socket.codec.SimpleDecoder;
+import corss.server.socket.codec.SimpleEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,8 +10,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
 
 /**
  * Created by lianrongfa on 2018/5/25.

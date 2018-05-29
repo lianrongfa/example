@@ -1,5 +1,6 @@
-package corss.server;
+package corss.server.netty;
 
+import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -18,7 +19,12 @@ public class NettyContainer {
     public final static ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     /**
-     * 存储设备与通道的唯一对应，一个账号只能有一个在线
+     * 通道对应设备id
      */
-    public final static Map<String,Object> source=new ConcurrentHashMap<String,Object>();
+    public final static Map<Channel,String> sourceIds=new ConcurrentHashMap<Channel,String>();
+
+    /**
+     * 通道对应设备id
+     */
+    public final static Map<String,Channel> sourceChannels=new ConcurrentHashMap<String,Channel>();
 }

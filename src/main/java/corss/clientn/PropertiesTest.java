@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -14,11 +16,13 @@ import java.util.regex.Pattern;
  * Created by lianrongfa on 2018/5/21.
  */
 public class PropertiesTest {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws UnsupportedEncodingException, NoSuchMethodException {
 
-        String json="{'b':31}";
-        Aaa aaa = JSONObject.parseObject(json, Aaa.class);
-        System.out.println();
+        Date date = new Date();
+        Aaa aaa = null;
+        Method method = Aaa.class.getMethod("getB");
+        Class<?> declaringClass = method.getDeclaringClass();
+        System.out.println(declaringClass);
     }
 
     private static void refex() {

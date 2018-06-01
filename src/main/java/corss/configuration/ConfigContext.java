@@ -40,6 +40,10 @@ public class ConfigContext {
      * 服务端口
      */
     private int serverPort;
+    private int socketPort;
+
+    //web服务器接口地址
+    private String webserverUrl;
 
     private ConfigContext(){
         load();
@@ -51,6 +55,10 @@ public class ConfigContext {
     private void load(){
         //端口
         serverPort=Integer.valueOf(properties.getProperty("server.port","8080"));
+        socketPort=Integer.valueOf(properties.getProperty("socket.port","8089"));
+
+        //web服务器接口地址
+        socketPort=Integer.valueOf(properties.getProperty("webserver.url"));
 
         //协议标识符
         String property = properties.getProperty("receive.container");
@@ -67,9 +75,16 @@ public class ConfigContext {
         System.out.println(protocolConfig);
     }
 
+    public String getWebserverUrl() {
+        return webserverUrl;
+    }
 
     public int getServerPort() {
         return this.serverPort;
+    }
+
+    public int getSocketPort() {
+        return socketPort;
     }
 
     public ProtocolConfig getProtocolConfig(){

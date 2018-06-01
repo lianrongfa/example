@@ -14,9 +14,10 @@ import java.util.Scanner;
 public class ClientStart {
     public static void main(String[] args){
 
-        socketTest("{'haha':'1'}",1);
-        //System.out.println(httpRequest("http://127.0.0.1:8089","POST","{'hi':'1'}"));
+        //socketTest("{'haha':'1'}",1);
+        System.out.println(httpRequest("http://www.baidu.com","POST","{'hi':'1'}"));
         //nettyTest();
+        //socketNettyTest();
     }
 
     private static void nettyTest() {
@@ -26,10 +27,35 @@ public class ClientStart {
             Scanner scanner = new Scanner(System.in);
             while (true){
                 String s = scanner.nextLine();
-                byte [] bytes={20,1,8};
+                byte [] bytes={65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31};//消息
                 client.sendMessage(bytes);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *模拟下位机
+     */
+    private static void socketNettyTest() {
+        try {
+            Socket socket = new Socket("127.0.0.1", 8080);
+
+            OutputStream outputStream = socket.getOutputStream();
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            //String json="{'haha':'1'}";
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+
+                String s = scanner.nextLine();
+                dataOutputStream.write(new byte[]{65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31});//消息
+
+                dataOutputStream.flush();
+            }
+
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

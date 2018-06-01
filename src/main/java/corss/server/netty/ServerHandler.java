@@ -1,20 +1,21 @@
 package corss.server.netty;
 
-import corss.controller.ConnectionController;
 import corss.controller.Controller;
-import corss.controller.ProxyController;
+import corss.proxy.SimpleFactory;
+import corss.server.netty.protocol.UART;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.SocketAddress;
-import java.util.Iterator;
 
 /**
  * Created by lianrongfa on 2018/5/17.
  */
 public class ServerHandler extends ChannelInboundHandlerAdapter {
-
+    private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
     /**
      * 客户端与服务端创建连接的时候调用
      */
@@ -23,7 +24,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         Channel channel = ctx.channel();
         SocketAddress address = channel.remoteAddress();
         System.out.println(address+":客户端与服务端连接开始...");
-        NettyContainer.group.add(ctx.channel());
+        NettyContainer.group.add(channel);
 
     }
 
@@ -62,25 +63,28 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
-        System.out.println("服务端接收到：" + info);
+        logger.info("服务端接收到：" + info);
+        UART uart;
+        try {
+            uart = (UART) info;
+        } catch (Exception e) {
+            logger.error("协议错误");
+            return;
+        }
+        Controller controller = SimpleFactory.createController(channelHandlerContext, uart);
+        controller.executor();
 
-        ProxyController proxy = new ProxyController(new ConnectionController(channelHandlerContext,null));
-        Controller controller = proxy.getInstace();
-
-        /** 此处可配置 调用哪个行为 **/
-        controller.execute();
-
-        //服务端使用这个就能向 每个连接上来的客户端群发消息
-        //NettyContainer.group.writeAndFlush(info);
+        /*//服务端使用这个就能向 每个连接上来的客户端群发消息
+        NettyContainer.group.writeAndFlush(info);
         Iterator<Channel> iterator = NettyContainer.group.iterator();
-        /*while (iterator.hasNext()) {
+        while (iterator.hasNext()) {
             //打印出所有客户端的远程地址
             Channel channel = iterator.next();
             System.out.println("客户端地址："+channel.remoteAddress());
             channel.writeAndFlush(info);
             System.out.println("给客户端发送："+info);
-        }*/
+        }
         //单独回复客户端信息
-        // channelHandlerContext.writeAndFlush(info);
+        // channelHandlerContext.writeAndFlush(info);*/
     }
 }

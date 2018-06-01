@@ -1,5 +1,6 @@
 package corss.server.socket;
 
+import corss.configuration.ConfigContext;
 import corss.server.socket.codec.SimpleDecoder;
 import corss.server.socket.codec.SimpleEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -10,11 +11,15 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by lianrongfa on 2018/5/25.
  */
 public class SocketServer {
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+
     private int port;
 
     public SocketServer(int port) throws InterruptedException {
@@ -46,6 +51,11 @@ public class SocketServer {
         });
 
         ChannelFuture future = bootstrap.bind(this.port).sync();
-        System.out.println("start http server success.");
+
+        if (future.isSuccess()) {
+            logger.info("socket server started success port:"+ ConfigContext.getInstace().getSocketPort());
+        } else {
+            logger.error("socket server started fail");
+        }
     }
 }

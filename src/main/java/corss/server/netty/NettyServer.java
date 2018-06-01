@@ -1,5 +1,6 @@
 package corss.server.netty;
 
+import corss.configuration.ConfigContext;
 import corss.server.netty.codec.UARTDecoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -68,7 +69,7 @@ public class NettyServer {
 
         ChannelFuture f = bootstrap.bind(serverPort).sync();
         if (f.isSuccess()) {
-            logger.info("long connection started success");
+            logger.info("long connection started success port:"+ ConfigContext.getInstace().getServerPort());
         } else {
             logger.error("long connection started fail");
         }

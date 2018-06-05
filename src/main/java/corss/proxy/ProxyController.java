@@ -4,15 +4,17 @@ import corss.controller.Controller;
 import corss.controller.FaultController;
 import corss.server.netty.protocol.UART;
 import io.netty.channel.ChannelHandlerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 
 /**
  * Created by lianrongfa on 2018/5/23.
  */
 public class ProxyController implements InvocationHandler{
+
+    private static final Logger logger=LoggerFactory.getLogger(Controller.class);
 
     private Controller target;
 
@@ -22,7 +24,10 @@ public class ProxyController implements InvocationHandler{
 
     public Controller getInstace() {
         Class<? extends Controller> clazz = target.getClass();
-        Object o = Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), this);
+
+        Class<?>[] interfaces = clazz.getSuperclass().getInterfaces();
+
+        Object o = Proxy.newProxyInstance(clazz.getClassLoader(), interfaces, this);
         return (Controller)o;
     }
 
@@ -31,7 +36,14 @@ public class ProxyController implements InvocationHandler{
 
         //预留逻辑
 
-        Object o = method.invoke(target, args);
+        Object o=null;
+        try {
+            o = method.invoke(target, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("class:"+method.getDeclaringClass().getName()+" method:"+method.getName()+e.getMessage());
+            //throw new RuntimeException(e);
+        }
 
         //预留逻辑
 

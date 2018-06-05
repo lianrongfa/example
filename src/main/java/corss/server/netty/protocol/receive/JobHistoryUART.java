@@ -76,29 +76,29 @@ public class JobHistoryUART extends AbstractUART {
     /**
      * 预告
      */
-    private byte advanceState;
+    private char advanceState;
     /**
      * 出场
      */
-    private byte marchOutState;
+    private char marchOutState;
 
     /**
      * 报警
      */
-    private byte alertState;
+    private char alertState;
 
     /**
      * 关杆
      */
-    private byte offState;
+    private char offState;
     /**
      * 到达
      */
-    private byte reachState;
+    private char reachState;
     /**
      * 开杆
      */
-    private byte onState;
+    private char onState;
 
     @Override
     public void parse() {
@@ -129,6 +129,19 @@ public class JobHistoryUART extends AbstractUART {
             from=from+increment;
             to=to+increment;
         }
+
+        //预告
+        this.advanceState=(char)this.data[92];
+        /// 出场
+        this.marchOutState=(char)this.data[93];
+        //报警
+        this.alertState=(char)this.data[94];
+        // 关杆
+        this.offState=(char)this.data[95];
+        //到达
+        this.reachState=(char)this.data[96];
+        //开杆
+        this.onState=(char)this.data[97];
     }
 
     private boolean checkString(String s) {
@@ -212,28 +225,5 @@ public class JobHistoryUART extends AbstractUART {
         return endBOn;
     }
 
-    public byte getAdvanceState() {
-        return advanceState;
-    }
-
-    public byte getMarchOutState() {
-        return marchOutState;
-    }
-
-    public byte getAlertState() {
-        return alertState;
-    }
-
-    public byte getOffState() {
-        return offState;
-    }
-
-    public byte getReachState() {
-        return reachState;
-    }
-
-    public byte getOnState() {
-        return onState;
-    }
 
 }

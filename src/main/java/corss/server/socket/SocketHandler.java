@@ -35,6 +35,7 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
             Class clazz = Type.getClazz(type);
 
             if(clazz!=null&&value!=null){
+                channelHandlerContext.writeAndFlush("{'state':true,'msg':'接收信息成功！'}");
                 Object o = JSONObject.parseObject(value, clazz);
                 UART uart = (UART) o;
                 uart.parse();
@@ -46,6 +47,8 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
                 if(channel!=null&&channel.isActive()){
                     ChannelFuture channelFuture = channel.writeAndFlush(data);
                 }
+            }else{
+                channelHandlerContext.writeAndFlush("{'state':false,'msg':'没有该类型的操作！'}");
             }
         }
         System.out.println("服务端接收到：" + info);

@@ -1,11 +1,15 @@
 package corss.clientn;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import corss.server.netty.protocol.receive.RemoteSettingRecUART;
+import corss.server.netty.protocol.send.RemoteSettingSendUART;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -16,13 +20,28 @@ import java.util.regex.Pattern;
  * Created by lianrongfa on 2018/5/21.
  */
 public class PropertiesTest {
-    public static void main(String[] args) throws UnsupportedEncodingException, NoSuchMethodException {
+    public static void main(String[] args){
 
-        Date date = new Date();
-        Aaa aaa = null;
-        Method method = Aaa.class.getMethod("getB");
-        Class<?> declaringClass = method.getDeclaringClass();
-        System.out.println(declaringClass);
+        String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
+        RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
+        System.out.println();
+
+    }
+
+    private static void test32() {
+        RemoteSettingRecUART remoteSettingRecUART = new RemoteSettingRecUART();
+
+        byte[] bytes ={69,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,
+                     0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
+                    ,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
+                    };
+        remoteSettingRecUART.setData(bytes);
+        remoteSettingRecUART.parse();
+
+        JSONObject o = (JSONObject)JSONObject.toJSON(remoteSettingRecUART);
+
+
+        System.out.println(JSONObject.toJSONString(remoteSettingRecUART));
     }
 
     private static void refex() {
@@ -43,7 +62,7 @@ public class PropertiesTest {
     }
 
     public static void jjj(String s){
-
+        int i=1/0;
     }
 
     private static void test3() {

@@ -1,9 +1,7 @@
 package corss.server.netty.protocol;
 
-import corss.server.netty.protocol.receive.FaultUART;
-import corss.server.netty.protocol.receive.JobHistoryUART;
-import corss.server.netty.protocol.send.RecordUART;
-import corss.server.netty.protocol.receive.ReplyUART;
+import corss.server.netty.protocol.receive.*;
+import corss.server.netty.protocol.send.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +19,15 @@ public class ProtocolFactory {
         map.put((byte) 66,FaultUART.class);
         map.put((byte) 67,FaultUART.class);
         map.put((byte) 68,JobHistoryUART.class);
-        map.put((byte) 20,ReplyUART.class);
-        map.put((byte) 69,RemoteSettingUART.class);
-        map.put((byte) 97,RemoteSettingUART.class);
-        map.put((byte) 98,RecordUART.class);
+        map.put((byte) 69,RemoteSettingRecUART.class);
+        map.put((byte) 70,EquipmentRecUART.class);
+        map.put((byte) 97,PullSettingUART.class);
+        map.put((byte) 98,RecordUART.class);//--
+        map.put((byte) 99,DateSettingUART.class);
+        map.put((byte) 100,EquipmentSendUART.class);//--
+        map.put((byte) 101,RemoteSettingSendUART.class);
+        map.put((byte) 71,RecSeerUART.class);
+        map.put((byte) 102,SendSeerUART.class);
     }
 
     public static UART createUART(byte mark,byte [] data){

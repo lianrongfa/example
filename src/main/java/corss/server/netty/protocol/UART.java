@@ -42,8 +42,15 @@ public interface UART {
      */
     String getIdString();
 
+    void setIdString(String id);
     /**
      * 启动解析
      */
     void parse();
+
+    /**
+     * 设置操作类型
+     * @param type
+     */
+    void setType(char type);
 }

@@ -1,4 +1,4 @@
-package cn.jtv.cross.cross;
+package cn.jtv.cross;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

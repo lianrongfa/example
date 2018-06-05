@@ -1,6 +1,6 @@
-package corss.server.netty.protocol;
+package corss.server.netty.protocol.send;
 
-import org.junit.Test;
+import corss.server.netty.protocol.AbstractUART;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
@@ -9,32 +9,40 @@ import java.util.Map;
 
 /**
  * Created by lianrongfa on 2018/5/22.
- * 参数设定上传 / 远程参数设定(共8B)
+ * 远程参数设定(共14B)
  */
-public class RemoteSettingUART extends AbstractUART {
-    private final static Map<String, Relation> relationMap = new HashMap<>();
+public class RemoteSettingSendUART extends AbstractUART {
+
+    private final static Map<String, Relation> relationMap1 = new HashMap<>();
+    private final static Map<String, Relation> relationMap2 = new HashMap<>();
+    private final static Map<String, Relation> relationMap3 = new HashMap<>();
 
     static {
-        relationMap.put("crossLineType",new Relation(1,2));
-        relationMap.put("mileage",new Relation(3,3));
-        relationMap.put("meter",new Relation(3,6));
-        relationMap.put("oneTwoLine",new Relation(1,9));
-        relationMap.put("handrailType",new Relation(1,10));
-        relationMap.put("peacetimeState",new Relation(1,11));
-        relationMap.put("guardState",new Relation(1,12));
-        relationMap.put("earlyWarning",new Relation(1,13));
-        relationMap.put("voiceState",new Relation(1,14));
-        relationMap.put("dataUpload",new Relation(1,15));
-        relationMap.put("fault",new Relation(1,16));
-        relationMap.put("closeRecord",new Relation(1,17));
-        relationMap.put("reviseTime",new Relation(1,18));
-        relationMap.put("warnNotOut",new Relation(2,19));
-        relationMap.put("warnNotOff",new Relation(2,21));
-        relationMap.put("earlyOn",new Relation(2,23));
-        relationMap.put("upStartWarn",new Relation(2,25));
-        relationMap.put("downStartWarn",new Relation(2,27));
-        relationMap.put("onGuardTime",new Relation(2,29));
-        relationMap.put("voiceOff",new Relation(4,31));
+        relationMap1.put("crossLineType", new Relation(1, 2));
+        relationMap1.put("mileage", new Relation(3, 3));
+        relationMap1.put("meter", new Relation(3, 6));
+
+        relationMap2.put("oneTwoLine", new Relation(1, 2));
+        relationMap2.put("handrailType", new Relation(1, 3));
+        relationMap2.put("peacetimeState", new Relation(1, 4));
+        relationMap2.put("guardState", new Relation(1, 5));
+        relationMap2.put("marchOut", new Relation(1, 6));//
+        relationMap2.put("earlyWarning", new Relation(1, 7));
+        relationMap2.put("voiceState", new Relation(1, 8));
+        relationMap2.put("dataUpload", new Relation(1, 9));
+        relationMap2.put("dataUploadType", new Relation(1, 10));//
+        relationMap2.put("fault", new Relation(1, 11));
+        relationMap2.put("closeRecord", new Relation(1, 12));
+        relationMap2.put("reviseTime", new Relation(1, 13));
+
+        relationMap3.put("warnNotOut", new Relation(1, 2));
+        relationMap3.put("warnNotOff", new Relation(1, 3));
+        relationMap3.put("earlyOn", new Relation(1, 4));
+        relationMap3.put("upStartWarn", new Relation(1, 5));
+        relationMap3.put("downStartWarn", new Relation(1, 6));
+        relationMap3.put("onGuardTime", new Relation(1, 7));
+        relationMap3.put("voiceOffStart", new Relation(1, 8));
+        relationMap3.put("voiceOffEnd", new Relation(1, 9));
 
     }
 
@@ -51,6 +59,7 @@ public class RemoteSettingUART extends AbstractUART {
      * 8-牙林线
      * 9-北黑线
      * A-林密线
+     * ....具体参照协议文档
      */
     private char crossLineType;
     /**
@@ -80,6 +89,10 @@ public class RemoteSettingUART extends AbstractUART {
      * 在岗按钮 0启用 1停止 字符类型
      */
     private char guardState;
+    /**
+     * 出场按钮 0启用 1停止 字符类型
+     */
+    private char marchOut;
 
     /**
      * 自动预警 0启用 1停止 字符类型
@@ -94,6 +107,10 @@ public class RemoteSettingUART extends AbstractUART {
      * 数据上传 0启用 1停止 字符类型
      */
     private char dataUpload;
+    /**
+     * 上传种类 0全部 1违章 字符类型
+     */
+    private char dataUploadType;
 
     /**
      * 设备故障 0上传 1禁止 字符类型
@@ -138,23 +155,29 @@ public class RemoteSettingUART extends AbstractUART {
     private String onGuardTime = "  ";
 
     /**
-     * 语音关闭 范围:0000-9999 字符串类型
+     * 语音关闭始 范围:00-99 字符串类型
      */
-    private String voiceOff = "    ";
+    private String voiceOffStart = "  ";
+    /**
+     * 语音关闭末 范围:00-99 字符串类型
+     */
+    private String voiceOffEnd = "  ";
 
-
-    public RemoteSettingUART() {
-        super((byte) 97, (byte) 0x31);
+    public RemoteSettingSendUART() {
+        //type 默认为1
+        super((byte) 101, '1');
     }
 
     @Override
     public void parse() {
         //重新根据mark、type字段填充data数组，因为参数设定、上传用同一个协议，但是识别码不同
         data[0] = this.mark;
-        data[1] = this.type;
+        data[1] = (byte) this.type;
+
+        Map<String, Relation> map = this.chooseMap();
 
         Class clazz = this.getClass();
-        for (Map.Entry<String, Relation> relationEntry : relationMap.entrySet()) {
+        for (Map.Entry<String, Relation> relationEntry : map.entrySet()) {
             String key = relationEntry.getKey();
             Relation relation = relationEntry.getValue();
             try {
@@ -163,14 +186,22 @@ public class RemoteSettingUART extends AbstractUART {
 
                 Object o = field.get(this);
                 String s = String.valueOf(o);
-                if(s!=null){
-                    int length = relation.getLength();
-                    int idx = relation.getIdx();
-                    while (s.length()<length){
-                        s="0"+s;
+
+                if (this.type == '2') {//限定时间
+                    if (s != null) {
+                        byte aByte = Byte.valueOf(s);
+                        this.data[relation.getIdx()]=aByte;
                     }
-                    byte[] bytes = s.getBytes("US-ASCII");
-                    insertArr(bytes,idx);
+                } else if (this.type == '1' || this.type == '0') {//基本参数、工作模式
+                    if (s != null) {
+                        int length = relation.getLength();
+                        int idx = relation.getIdx();
+                        while (s.length() < length) {
+                            s = "0" + s;
+                        }
+                        byte[] bytes = s.getBytes("US-ASCII");
+                        insertArr(bytes, idx);
+                    }
                 }
 
             } catch (NoSuchFieldException e) {
@@ -203,6 +234,17 @@ public class RemoteSettingUART extends AbstractUART {
         }
     }
 
+    private Map<String, Relation> chooseMap() {
+        char c = this.getType();
+        if (c == '0') {
+            return relationMap1;
+        } else if (c == '1') {
+            return relationMap2;
+        } else if (c == '2') {
+            return relationMap3;
+        }
+        return null;
+    }
 
     /**
      * 远程参数设定上传使用
@@ -216,12 +258,11 @@ public class RemoteSettingUART extends AbstractUART {
     /**
      * 远程参数设定上传使用
      *
-     * @param type
+     * @param //type
      */
-    public void setType(byte type) {
+    /*public void setType(byte type) {
         this.type = type;
-    }
-
+    }*/
     public char getCrossLineType() {
         return crossLineType;
     }
@@ -374,11 +415,35 @@ public class RemoteSettingUART extends AbstractUART {
         this.onGuardTime = onGuardTime;
     }
 
-    public String getVoiceOff() {
-        return voiceOff;
+    public char getMarchOut() {
+        return marchOut;
     }
 
-    public void setVoiceOff(String voiceOff) {
-        this.voiceOff = voiceOff;
+    public void setMarchOut(char marchOut) {
+        this.marchOut = marchOut;
+    }
+
+    public char getDataUploadType() {
+        return dataUploadType;
+    }
+
+    public void setDataUploadType(char dataUploadType) {
+        this.dataUploadType = dataUploadType;
+    }
+
+    public String getVoiceOffStart() {
+        return voiceOffStart;
+    }
+
+    public void setVoiceOffStart(String voiceOffStart) {
+        this.voiceOffStart = voiceOffStart;
+    }
+
+    public String getVoiceOffEnd() {
+        return voiceOffEnd;
+    }
+
+    public void setVoiceOffEnd(String voiceOffEnd) {
+        this.voiceOffEnd = voiceOffEnd;
     }
 }

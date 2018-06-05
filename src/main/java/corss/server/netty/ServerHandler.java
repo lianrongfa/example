@@ -3,6 +3,7 @@ package corss.server.netty;
 import corss.controller.Controller;
 import corss.proxy.SimpleFactory;
 import corss.server.netty.protocol.UART;
+import corss.server.netty.protocol.send.EquipmentSendUART;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -25,7 +26,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         SocketAddress address = channel.remoteAddress();
         System.out.println(address+":客户端与服务端连接开始...");
         NettyContainer.group.add(channel);
-
+        //接通后取设备id
+        UART uart = new EquipmentSendUART();
+        uart.setType('1');
+        uart.parse();
+        channel.writeAndFlush(uart.getData());
     }
 
     /**
@@ -37,7 +42,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         SocketAddress address = channel.remoteAddress();
         NettyContainer.group.remove(channel);
 
-        System.out.println(address+":客户端与服务端连接关闭...");
+        String id = NettyContainer.sourceIds.get(channel);
+        NettyContainer.sourceIds.remove(channel);
+        NettyContainer.sourceChannels.remove(id);
+
+        logger.warn(address+":客户端与服务端连接关闭...");
     }
 
     /**
@@ -63,7 +72,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
-        logger.info("服务端接收到：" + info);
+
         UART uart;
         try {
             uart = (UART) info;
@@ -71,20 +80,27 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             logger.error("协议错误");
             return;
         }
-        Controller controller = SimpleFactory.createController(channelHandlerContext, uart);
-        controller.executor();
+        logger.info("服务端接收到：" + uart.toString());
+        //回复设备、回复信息为前两位
+        byte[] bytes = buildData(uart);
+        channelHandlerContext.writeAndFlush(bytes);
 
-        /*//服务端使用这个就能向 每个连接上来的客户端群发消息
-        NettyContainer.group.writeAndFlush(info);
-        Iterator<Channel> iterator = NettyContainer.group.iterator();
-        while (iterator.hasNext()) {
-            //打印出所有客户端的远程地址
-            Channel channel = iterator.next();
-            System.out.println("客户端地址："+channel.remoteAddress());
-            channel.writeAndFlush(info);
-            System.out.println("给客户端发送："+info);
+        Controller controller = SimpleFactory.createController(channelHandlerContext, uart);
+        if(controller!=null){
+            controller.executor();
+        }else{
+            logger.warn("未找到对应的控制器!");
         }
-        //单独回复客户端信息
-        // channelHandlerContext.writeAndFlush(info);*/
+    }
+
+    private byte[] buildData(UART uart) {
+        byte[] bytes = new byte[14];
+        for (int i=0;i<14;i++){
+            bytes[i]=0x20;
+        }
+        bytes[0]=104;
+        bytes[1]=uart.getMark()[0];
+        bytes[2]=uart.getMark()[1];
+        return bytes;
     }
 }

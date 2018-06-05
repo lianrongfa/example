@@ -13,7 +13,7 @@ public class DateSettingUART extends AbstractUART {
     private Date settingDate;
 
     public DateSettingUART(Date date) {
-        super((byte) 99, (byte) 0x30);
+        super((byte) 99, '0');
 
         byte[] startBytes = getTimeByte(date);
 
@@ -21,12 +21,13 @@ public class DateSettingUART extends AbstractUART {
     }
 
     public DateSettingUART() {
-        super((byte) 99, (byte) 0x30);
+        super((byte) 99, '0');
     }
 
     @Override
     public void parse() {
-        byte[] startBytes = getTimeByte(this.settingDate);
+        //byte[] startBytes = getTimeByte(this.settingDate);
+        byte[] startBytes = getTimeByte(new Date());
 
         insertArr(startBytes, 2);
     }

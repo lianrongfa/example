@@ -1,5 +1,6 @@
 package corss.client;
 
+import com.alibaba.fastjson.JSONObject;
 import corss.server.socket.protocol.SimpleProduct;
 
 import java.io.*;
@@ -14,20 +15,38 @@ import java.util.Scanner;
 public class ClientStart {
     public static void main(String[] args){
 
+
+        /*JSONObject jsonObject = new JSONObject();
+        jsonObject.put("proEquipmentNum","123");
+        jsonObject.put("proType","1");
+        jsonObject.put("eq26","2018-01-01 01:01:01");
+
+        String msg = jsonObject.toJSONString();
+        msg="faultJson="+msg;*/
         //socketTest("{'haha':'1'}",1);
-        System.out.println(httpRequest("http://www.baidu.com","POST","{'hi':'1'}"));
-        //nettyTest();
+        //System.out.println(httpRequest("http://192.168.20.140:2022/dkgl/dkgl/dkProblem.do?method=saveProblem","POST",msg));
+        nettyTest();
         //socketNettyTest();
     }
 
     private static void nettyTest() {
         try {
-            Client client = new Client("127.0.0.1", 8080);
-
+            //String ip="118.26.65.50";
+            String ip="127.0.0.1";
+            Client client = new Client(ip, 9000);
+            client.sendMessage(new byte[]{70,0x31,0x31,0x38,0x32,0x34,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20});
             Scanner scanner = new Scanner(System.in);
             while (true){
                 String s = scanner.nextLine();
                 byte [] bytes={65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31};//消息
+
+                /*byte[] bytes ={69,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,
+                        0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
+                        ,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
+                };*/
+
+                //byte [] bytes={70,0x31,0x31,0x38,0x32,0x34,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20};//消息
+
                 client.sendMessage(bytes);
             }
         } catch (Exception e) {
@@ -40,18 +59,30 @@ public class ClientStart {
      */
     private static void socketNettyTest() {
         try {
-            Socket socket = new Socket("127.0.0.1", 8080);
+            Socket socket = new Socket("127.0.0.1", 9000);
 
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             //String json="{'haha':'1'}";
+
+
             Scanner scanner = new Scanner(System.in);
             while (true) {
 
                 String s = scanner.nextLine();
-                dataOutputStream.write(new byte[]{65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31});//消息
+                byte [] bytes={65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31};//消息
+
+                dataOutputStream.write(bytes);//消息
 
                 dataOutputStream.flush();
+                byte[] bytes1 = new byte[14];
+                int read = dataInputStream.read(bytes1);
+
+                for (byte b : bytes1) {
+                    System.out.print(b+"\t");
+                }
+                System.out.println();
             }
 
 
@@ -91,7 +122,7 @@ public class ClientStart {
     }
 
     public static String httpRequest(String requestUrl,String requestMethod,String outputStr){
-        StringBuffer buffer=null;
+        StringBuffer buffer=new StringBuffer();
         try{
             URL url=new URL(requestUrl);
             HttpURLConnection conn=(HttpURLConnection)url.openConnection();
@@ -110,7 +141,7 @@ public class ClientStart {
             InputStream is=conn.getInputStream();
             InputStreamReader isr=new InputStreamReader(is,"utf-8");
             BufferedReader br=new BufferedReader(isr);
-            buffer=new StringBuffer();
+
             String line=null;
             while((line=br.readLine())!=null){
                 buffer.append(line);

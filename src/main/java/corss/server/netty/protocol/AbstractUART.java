@@ -34,7 +34,7 @@ public abstract class AbstractUART implements UART {
     protected byte mark;
 
     //操作码
-    protected byte type;
+    protected char type;
 
     //设备id
     protected String equipmentId;
@@ -52,32 +52,33 @@ public abstract class AbstractUART implements UART {
      * @param mark 识别码
      * @param type 操作码
      */
-    public AbstractUART(byte mark, byte type) {
+    public AbstractUART(byte mark, char type) {
         this.mark = mark;
         this.type = type;
 
         ProtocolConfig protocolConfig = ConfigContext.getInstace().getProtocolConfig();
         Integer size = protocolConfig.getReceiveMap().get(mark);
-        this.setData(new byte[size]);
+        byte[] bytes = new byte[size];
+        for (int i=0;i<size;i++){
+            bytes[i]=0x20;
+        }
+        this.setData(bytes);
 
         //填充byte数组
         data[0]=this.mark;
-        data[1]=this.type;
+        data[1]= (byte) this.type;
     }
 
-    public byte getType() {
+    public char getType() {
         return type;
     }
 
-    public void setType(byte type) {
+    public void setType(char type) {
         this.type = type;
     }
 
-    public String getEquipmentId() {
-        return equipmentId;
-    }
 
-    public void setEquipmentId(String equipmentId) {
+    public void setIdString(String equipmentId) {
         this.equipmentId = equipmentId;
     }
 
@@ -133,8 +134,9 @@ public abstract class AbstractUART implements UART {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Byte item :this.data) {
-            sb.append(item);
+        for (byte item :this.data) {
+            Integer valueOf = Integer.valueOf(item);
+            sb.append(valueOf.toHexString(valueOf)+"\t");
         }
         return sb.toString();
     }
@@ -147,7 +149,7 @@ public abstract class AbstractUART implements UART {
 
     @Override
     public String getIdString() {
-        return null;
+        return this.equipmentId;
     }
 
 
@@ -201,5 +203,13 @@ public abstract class AbstractUART implements UART {
             return idx+bytes.length;
         }
         return idx;
+    }
+
+    public String getEquipmentId() {
+        return equipmentId;
+    }
+
+    public void setEquipmentId(String equipmentId) {
+        this.equipmentId = equipmentId;
     }
 }

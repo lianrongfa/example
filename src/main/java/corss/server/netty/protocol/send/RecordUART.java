@@ -1,10 +1,7 @@
 package corss.server.netty.protocol.send;
 
-import corss.configuration.ConfigContext;
-import corss.configuration.ProtocolConfig;
 import corss.server.netty.protocol.AbstractUART;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
@@ -22,7 +19,7 @@ public class RecordUART extends AbstractUART {
     private Date endTime;
 
     public RecordUART() {
-        this.mark=98;
+        super((byte)98,'0');
     }
 
     /**
@@ -31,7 +28,7 @@ public class RecordUART extends AbstractUART {
      * @param startTime 开始时间  18 5 23 16 55
      * @param endTime 结束时间  18 5 23 16 55
      */
-    public RecordUART(byte type, Date startTime, Date endTime) {
+    public RecordUART(char type, Date startTime, Date endTime) {
         super((byte)98,type);
 
         this.startTime = startTime;
@@ -47,20 +44,17 @@ public class RecordUART extends AbstractUART {
 
     @Override
     public void parse() {
-        ProtocolConfig protocolConfig = ConfigContext.getInstace().getProtocolConfig();
-        int size = protocolConfig.getReceiveMap().get(mark);
-        this.setData(new byte[size]);
 
-        //填充byte数组
+        //重新填充byte数组
         data[0]=this.mark;
-        data[1]=this.type;
+        data[1]= (byte) this.type;
 
-        int idx=2;
+        /*int idx=2;
 
         byte[] startBytes = getTimeByte(this.startTime);
         byte[] endTimeBytes = getTimeByte(this.endTime);
 
-        int i = insertArr(endTimeBytes, insertArr(startBytes, idx));
+        int i = insertArr(endTimeBytes, insertArr(startBytes, idx));*/
     }
 
     public Date getStartTime() {

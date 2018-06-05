@@ -21,9 +21,10 @@ public abstract class HttpUtil {
      */
     public static String httpRequest(String requestUrl, String requestMethod, String outputStr) {
         StringBuffer buffer = null;
+        HttpURLConnection conn=null;
         try {
             URL url = new URL(requestUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setRequestMethod(requestMethod);
@@ -40,14 +41,18 @@ public abstract class HttpUtil {
             InputStreamReader isr = new InputStreamReader(is, "utf-8");
             BufferedReader br = new BufferedReader(isr);
             buffer = new StringBuffer();
-            String line = null;
+            String line = "";
             while ((line = br.readLine()) != null) {
                 buffer.append(line);
             }
-            conn.disconnect();
+
         } catch (Exception e) {
             e.printStackTrace();
 
+        }finally{
+            if(conn!=null){
+                conn.disconnect();
+            }
         }
         return buffer.toString();
     }

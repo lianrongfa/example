@@ -58,7 +58,7 @@ public class ConfigContext {
         socketPort=Integer.valueOf(properties.getProperty("socket.port","8089"));
 
         //web服务器接口地址
-        socketPort=Integer.valueOf(properties.getProperty("webserver.url"));
+        webserverUrl=properties.getProperty("webserver.url");
 
         //协议标识符
         String property = properties.getProperty("receive.container");

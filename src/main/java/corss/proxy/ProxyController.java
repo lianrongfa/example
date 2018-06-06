@@ -41,7 +41,7 @@ public class ProxyController implements InvocationHandler{
             o = method.invoke(target, args);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("class:"+method.getDeclaringClass().getName()+" method:"+method.getName()+e.getMessage());
+            logger.error("控制调用出错",e);
             //throw new RuntimeException(e);
         }
 

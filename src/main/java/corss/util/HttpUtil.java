@@ -1,5 +1,8 @@
 package corss.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,16 +15,18 @@ import java.net.URL;
  */
 public abstract class HttpUtil {
 
+    private final static Logger logger= LoggerFactory.getLogger(HttpUtil.class);
     /**
      * 发送http请求
+     *
      * @param requestUrl    请求的url地址
      * @param requestMethod 请求方法
      * @param outputStr     参数
      * @return
      */
     public static String httpRequest(String requestUrl, String requestMethod, String outputStr) {
-        StringBuffer buffer = null;
-        HttpURLConnection conn=null;
+        StringBuffer buffer = new StringBuffer();
+        HttpURLConnection conn = null;
         try {
             URL url = new URL(requestUrl);
             conn = (HttpURLConnection) url.openConnection();
@@ -40,7 +45,7 @@ public abstract class HttpUtil {
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is, "utf-8");
             BufferedReader br = new BufferedReader(isr);
-            buffer = new StringBuffer();
+
             String line = "";
             while ((line = br.readLine()) != null) {
                 buffer.append(line);
@@ -48,9 +53,9 @@ public abstract class HttpUtil {
 
         } catch (Exception e) {
             e.printStackTrace();
-
-        }finally{
-            if(conn!=null){
+            logger.error("web端接口调用出错！",e);
+        } finally {
+            if (conn != null) {
                 conn.disconnect();
             }
         }

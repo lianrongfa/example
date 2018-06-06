@@ -1,5 +1,6 @@
 package corss.server.netty;
 
+import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -27,4 +28,7 @@ public class NettyContainer {
      * 通道对应设备id
      */
     public final static Map<String,Channel> sourceChannels=new ConcurrentHashMap<String,Channel>();
+
+
+
 }

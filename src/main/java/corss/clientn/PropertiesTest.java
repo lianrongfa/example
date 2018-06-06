@@ -9,9 +9,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -22,10 +20,27 @@ import java.util.regex.Pattern;
 public class PropertiesTest {
     public static void main(String[] args){
 
-        String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
+        /*String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
         RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
-        System.out.println();
+        System.out.println();*/
 
+        ArrayList<Aaa> list = new ArrayList<>();
+        Aaa aaa1 = new Aaa();
+        aaa1.setB(2);
+
+        Aaa aaa2 = new Aaa();
+        aaa2.setB(1);
+        Aaa aaa3 = new Aaa();
+        aaa3.setB(3);
+
+        list.add(aaa1);
+        list.add(aaa2);
+        list.add(aaa3);
+        Collections.sort(list);
+
+        for (Aaa aaa : list) {
+            System.out.println(aaa);
+        }
     }
 
     private static void test32() {
@@ -85,7 +100,7 @@ public class PropertiesTest {
             this.a = a;
         }
     }
-    static class Aaa{
+    static class Aaa implements Comparable<Aaa>{
         private int b;
         private char c;
 
@@ -103,6 +118,16 @@ public class PropertiesTest {
 
         public void setC(char c) {
             this.c = c;
+        }
+
+        @Override
+        public int compareTo(Aaa o) {
+            if(this.b>o.getB()){
+                return 1;
+            }else if(b<o.getB()){
+                return -1;
+            }
+            return 0;
         }
     }
     private static void test2() {

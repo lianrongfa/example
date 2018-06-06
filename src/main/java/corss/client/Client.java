@@ -46,8 +46,12 @@ public class Client {
 
     public void sendMessage(byte[] s){
         //SimpleProduct simpleProduct = new SimpleProduct(s.length(), s.getBytes());
-
-        socketChannel.writeAndFlush(s);
+        boolean active = socketChannel.isActive();
+        if (active){
+            socketChannel.writeAndFlush(s);
+        }else{
+            System.out.println("通道已经关闭。。。！！");
+        }
     }
 
     public int getPort() {

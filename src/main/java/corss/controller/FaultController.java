@@ -30,7 +30,9 @@ public class FaultController extends AbstractController{
 
             String msg = jsonObject.toJSONString();
             msg="faultJson="+msg;
+
             String result = HttpUtil.httpRequest(getUrl() + method, "POST", msg);
+
             return result;
         }
 

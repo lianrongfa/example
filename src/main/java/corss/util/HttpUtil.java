@@ -52,8 +52,7 @@ public abstract class HttpUtil {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("web端接口调用出错！",e);
+            logger.error("web端接口调用出错！[url:"+requestUrl+"][param:"+outputStr+"]",e);
         } finally {
             if (conn != null) {
                 conn.disconnect();

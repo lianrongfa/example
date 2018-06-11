@@ -26,9 +26,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         SocketAddress address = channel.remoteAddress();
         System.out.println(address+":客户端与服务端连接开始...");
         NettyContainer.group.add(channel);
-        //接通后取设备id
-
-        Thread.sleep(100);
+        //接通后取设备id  ps:经沟通,改为设备通电一分钟后自动上传设备id
+        /*Thread.sleep(100);
         UART uart = new EquipmentSendUART();
         uart.setType('1');
         uart.parse();
@@ -36,7 +35,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         Thread.sleep(100);
         channel.writeAndFlush(uart.getData());
         Thread.sleep(100);
-        channel.writeAndFlush(uart.getData());
+        channel.writeAndFlush(uart.getData());*/
     }
 
     /**

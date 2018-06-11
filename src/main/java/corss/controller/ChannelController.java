@@ -33,8 +33,8 @@ public class ChannelController extends AbstractController {
             if(idString!=null&&c!=null){
 
                 Channel channel = sourceChannels.get(idString);
-                if(channel!=null){
-                    logger.warn("设备："+idString+" 已与通道关联，已将此前设备通道关闭，请检查设备id是否重复！");
+                if (channel != null && !channel.equals(c)) {
+                    logger.warn("设备：" + idString + " 已与通道关联，已将此前设备通道关闭，请检查设备id是否重复！");
                     channel.close();
                 }
                 sourceChannels.put(idString,c);

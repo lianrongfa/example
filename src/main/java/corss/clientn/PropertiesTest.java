@@ -24,6 +24,20 @@ public class PropertiesTest {
         RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
         System.out.println();*/
 
+        HashMap<String, String> map = new HashMap<>();
+
+        System.out.println(map.put("1",null));
+        System.out.println(map.put("1","1"));
+        System.out.println(map.put("1","2"));
+        System.out.println(map.get("1"));
+
+        System.out.println(map.putIfAbsent("2","3"));
+        System.out.println(map.putIfAbsent("2","4"));
+        System.out.println(map.putIfAbsent("2",null));
+        System.out.println(map.get("2"));
+    }
+
+    private static void sort() {
         ArrayList<Aaa> list = new ArrayList<>();
         Aaa aaa1 = new Aaa();
         aaa1.setB(2);

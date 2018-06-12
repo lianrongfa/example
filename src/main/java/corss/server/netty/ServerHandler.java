@@ -24,8 +24,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
         SocketAddress address = channel.remoteAddress();
-        System.out.println(address+":客户端与服务端连接开始...");
         NettyContainer.group.add(channel);
+        logger.info(address+":客户端与服务端连接开始...");
         //接通后取设备id  ps:经沟通,改为设备通电一分钟后自动上传设备id
         /*Thread.sleep(100);
         UART uart = new EquipmentSendUART();

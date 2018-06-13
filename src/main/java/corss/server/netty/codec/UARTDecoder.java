@@ -20,9 +20,10 @@ public class UARTDecoder extends ByteToMessageDecoder {
         if (buffer.readableBytes() >= AbstractUART.MIN_LENGTH) {
 
             //防止消息过大,客户端攻击
-            if (buffer.readableBytes() > AbstractUART.MAX_LENGTH) {
+            /*if (buffer.readableBytes() > AbstractUART.MAX_LENGTH) {
                 buffer.skipBytes(buffer.readableBytes());
-            }
+                return;
+            }*/
 
             int startReader;
 

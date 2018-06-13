@@ -1,6 +1,7 @@
 package corss.configuration;
 
 import corss.clientn.PropertiesTest;
+import corss.util.PullEquipmentId;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +31,7 @@ public class ConfigContext {
 
     }
 
-    private final static ConfigContext configContext=new ConfigContext();
+    private static ConfigContext configContext=new ConfigContext();
 
     public static ConfigContext getInstace(){
         return configContext;
@@ -47,6 +48,7 @@ public class ConfigContext {
 
     private ConfigContext(){
         load();
+        new PullEquipmentId().start();
     }
 
     /**
@@ -72,7 +74,6 @@ public class ConfigContext {
             protocolConfig.getReceiveMap().put(item,Integer.valueOf(s));
         }
 
-        System.out.println(protocolConfig);
     }
 
     public String getWebserverUrl() {

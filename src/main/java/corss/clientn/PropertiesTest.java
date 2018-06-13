@@ -18,12 +18,16 @@ import java.util.regex.Pattern;
  * Created by lianrongfa on 2018/5/21.
  */
 public class PropertiesTest {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
 
         /*String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
         RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
         System.out.println();*/
 
+       throw new  Exception(String.format("readerIndex(%d)",1));
+    }
+
+    private static void map() {
         HashMap<String, String> map = new HashMap<>();
 
         System.out.println(map.put("1",null));
@@ -31,9 +35,9 @@ public class PropertiesTest {
         System.out.println(map.put("1","2"));
         System.out.println(map.get("1"));
 
-        System.out.println(map.putIfAbsent("2","3"));
+        /*System.out.println(map.putIfAbsent("2","3"));
         System.out.println(map.putIfAbsent("2","4"));
-        System.out.println(map.putIfAbsent("2",null));
+        System.out.println(map.putIfAbsent("2",null));*/
         System.out.println(map.get("2"));
     }
 

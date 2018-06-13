@@ -26,16 +26,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         SocketAddress address = channel.remoteAddress();
         NettyContainer.group.add(channel);
         logger.info(address+":客户端与服务端连接开始...");
+
         //接通后取设备id  ps:经沟通,改为设备通电一分钟后自动上传设备id
-        /*Thread.sleep(100);
-        UART uart = new EquipmentSendUART();
-        uart.setType('1');
-        uart.parse();
-        channel.writeAndFlush(uart.getData());
-        Thread.sleep(100);
-        channel.writeAndFlush(uart.getData());
-        Thread.sleep(100);
-        channel.writeAndFlush(uart.getData());*/
     }
 
     /**
@@ -44,14 +36,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        SocketAddress address = channel.remoteAddress();
+        //SocketAddress address = channel.remoteAddress();
         NettyContainer.group.remove(channel);
 
         String id = NettyContainer.sourceIds.get(channel);
         NettyContainer.sourceIds.remove(channel);
         NettyContainer.sourceChannels.remove(id);
 
-        logger.warn(address+":客户端与服务端连接关闭...");
+        logger.warn("设备："+id+" 与服务端连接关闭...");
     }
 
     /**
@@ -89,6 +81,9 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         logger.info("服务端接收到设备："+ id +" 的数据："+ uart.toString());
         //回复设备、回复信息为前两位
         byte[] bytes = buildData(uart);
+        for (byte aByte : bytes) {
+            System.out.print(aByte);
+        }
         channelHandlerContext.writeAndFlush(bytes);
 
         Controller controller = SimpleFactory.createController(channelHandlerContext, uart);

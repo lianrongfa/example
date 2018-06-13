@@ -7,12 +7,17 @@ import corss.server.netty.protocol.send.SendSeerUART;
 import corss.util.HttpUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by lianrongfa on 2018/6/4.
  * 转发预告信息
  */
 public class ForwardController extends AbstractController {
+
+    private static final Logger logger= LoggerFactory.getLogger(Controller.class);
+
 
     private final static String method = "/astassetconfig.do?method=findNextAssetId";
 
@@ -44,7 +49,11 @@ public class ForwardController extends AbstractController {
         seerUART.setType((char) b);
         seerUART.parse();
 
-        channel.writeAndFlush(seerUART.getData());
+        if(channel==null){
+            logger.warn("设备："+id+"未在本系统注册！");
+        }else{
+            channel.writeAndFlush(seerUART.getData());
+        }
 
         return null;
     }

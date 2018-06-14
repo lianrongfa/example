@@ -6,14 +6,17 @@ import corss.server.netty.protocol.UART;
 import corss.server.socket.protocol.SimpleProduct;
 import corss.server.socket.protocol.Type;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by lianrongfa on 2018/5/17.
  */
 public class SocketHandler extends ChannelInboundHandlerAdapter {
+
+    private static final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
     /**
      * 工程出现异常的时候调用
      */
@@ -28,29 +31,49 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
-        if(info instanceof SimpleProduct){
-            SimpleProduct simpleProduct = (SimpleProduct) info;
-            int type = simpleProduct.getType();
-            String value=new String(simpleProduct.getContent());
-            Class clazz = Type.getClazz(type);
+        Channel cannel=channelHandlerContext.channel();
+        try {
+            if(info instanceof SimpleProduct){
 
-            if(clazz!=null&&value!=null){
-                channelHandlerContext.writeAndFlush("{'state':true,'msg':'接收信息成功！'}");
-                Object o = JSONObject.parseObject(value, clazz);
-                UART uart = (UART) o;
-                uart.parse();
-                byte[] data = uart.getData();
+                SimpleProduct simpleProduct = (SimpleProduct) info;
+                int type = simpleProduct.getType();
+                String value=new String(simpleProduct.getContent());
+                logger.info("收到web端请求：type="+type+"value:"+value);
+                Class clazz = Type.getClazz(type);
+                if(clazz!=null&&value!=null){
+                    Object o = JSONObject.parseObject(value, clazz);
+                    byte[] data = new byte[0];
+                    String id = null;
+                    try {
+                        UART uart = (UART) o;
+                        uart.parse();
+                        data = uart.getData();
 
-                String id = uart.getIdString();
-
-                Channel channel = NettyContainer.sourceChannels.get(id);
-                if(channel!=null&&channel.isActive()){
-                    ChannelFuture channelFuture = channel.writeAndFlush(data);
+                        id = uart.getIdString();
+                    } catch (Exception e) {
+                        cannel.writeAndFlush("{'state':false,'msg':'协议错误，请检查！'}\r\n");
+                        logger.error("web端协议解析错误!",e);
+                        return;
+                    }
+                    if(id==null||"".equals(id)){
+                        cannel.writeAndFlush("{'state':false,'msg':'设备id不能为空！'}\r\n");
+                        return ;
+                    }
+                    Channel channel = NettyContainer.sourceChannels.get(id);
+                    if(channel!=null&&channel.isActive()){
+                        channel.writeAndFlush(data);
+                        cannel.writeAndFlush("{'state':true,'msg':'操作成功！'}\r\n");
+                    }else{
+                        cannel.writeAndFlush("{'state':false,'msg':'设备:"+id+" 未在本系统注册！'}\r\n");
+                        return;
+                    }
+                }else{
+                    cannel.writeAndFlush("{'state':false,'msg':'没有该类型的操作！'}\r\n");
                 }
-            }else{
-                channelHandlerContext.writeAndFlush("{'state':false,'msg':'没有该类型的操作！'}");
             }
+        } catch (Exception e) {
+            cannel.writeAndFlush(e+"\r\n");
+            logger.error("web接口调用错误!",e);
         }
-        System.out.println("服务端接收到：" + info);
     }
 }

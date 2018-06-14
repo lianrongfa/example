@@ -2,7 +2,6 @@ package corss.server.socket;
 
 import corss.configuration.ConfigContext;
 import corss.server.socket.codec.SimpleDecoder;
-import corss.server.socket.codec.SimpleEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -11,6 +10,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class SocketServer {
             protected void initChannel(SocketChannel sc) throws Exception {
                 ChannelPipeline pipeline = sc.pipeline();
                 pipeline.addLast(new SimpleDecoder());
-                pipeline.addLast(new SimpleEncoder());
+                pipeline.addLast(new StringEncoder());
                 pipeline.addLast(new SocketHandler());
                 /*pipeline.addLast(new HttpServerCodec());
                 pipeline.addLast(new HttpObjectAggregator(65535));

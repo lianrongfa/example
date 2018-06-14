@@ -21,6 +21,7 @@ public class SimpleDecoder extends ByteToMessageDecoder {
             //防止消息过大,客户端攻击
             if (buffer.readableBytes() > ConstantValue.MAX_LENGTH) {
                 buffer.skipBytes(buffer.readableBytes());
+                return;
             }
 
             int startReader;

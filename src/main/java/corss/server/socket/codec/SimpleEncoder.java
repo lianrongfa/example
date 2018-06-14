@@ -4,13 +4,28 @@ import corss.server.socket.protocol.SimpleProduct;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import io.netty.handler.codec.MessageToMessageEncoder;
+
+import java.util.List;
 
 /**
  * Created by lianrongfa on 2018/5/18.
  * 自定义协议编码器
  */
-public class SimpleEncoder extends MessageToByteEncoder<SimpleProduct> {
+public class SimpleEncoder extends MessageToMessageEncoder<String> {
+
     @Override
+    protected void encode(ChannelHandlerContext ctx, String msg, List<Object> out) throws Exception {
+        if(msg!=null){
+            // 写入消息的开头的信息标志(int类型)
+            //out.writeInt(msg.getHead_data());
+            // 写入消息的长度(int 类型)
+            //out.writeInt(msg.getContentLength());
+            // 写入消息的内容(byte[]类型)
+            out.add(msg);
+        }
+    }
+    /*@Override
     protected void encode(ChannelHandlerContext ctx, SimpleProduct msg, ByteBuf out) throws Exception {
         if(msg!=null){
             // 写入消息的开头的信息标志(int类型)
@@ -20,5 +35,5 @@ public class SimpleEncoder extends MessageToByteEncoder<SimpleProduct> {
             // 写入消息的内容(byte[]类型)
             out.writeBytes(msg.getContent());
         }
-    }
+    }*/
 }

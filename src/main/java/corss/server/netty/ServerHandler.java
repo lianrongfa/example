@@ -80,11 +80,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String id = NettyContainer.sourceIds.get(channelHandlerContext.channel());
         logger.info("服务端接收到设备："+ id +" 的数据："+ uart.toString());
         //回复设备、回复信息为前两位
-        byte[] bytes = buildData(uart);
-        for (byte aByte : bytes) {
-            System.out.print(aByte);
+        if(uart.getMark()[0]!=104){
+            byte[] bytes = buildData(uart);
+            channelHandlerContext.writeAndFlush(bytes);
         }
-        channelHandlerContext.writeAndFlush(bytes);
 
         Controller controller = SimpleFactory.createController(channelHandlerContext, uart);
         if(controller!=null){

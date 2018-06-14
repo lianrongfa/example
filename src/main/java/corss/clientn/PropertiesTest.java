@@ -1,5 +1,6 @@
 package corss.clientn;
 
+import cn.jtv.cross.SocketClient;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import corss.server.netty.protocol.receive.RemoteSettingRecUART;
@@ -23,8 +24,17 @@ public class PropertiesTest {
         /*String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
         RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
         System.out.println();*/
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
 
-       throw new  Exception(String.format("readerIndex(%d)",1));
     }
 
     private static void map() {

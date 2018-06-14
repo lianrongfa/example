@@ -23,10 +23,10 @@ public class ClientStart {
 
         String msg = jsonObject.toJSONString();
         msg="faultJson="+msg;*/
-        //socketTest("{'haha':'1'}",1);
+        //socketTest("{'equipmentId':'1002'}",3);
         //System.out.println(httpRequest("http://192.168.20.140:2022/dkgl/dkgl/dkProblem.do?method=saveProblem","POST",msg));
-        nettyTest();
-        //socketNettyTest();
+        //nettyTest();
+        socketNettyTest();
     }
 
     private static void nettyTest() {
@@ -84,7 +84,7 @@ public class ClientStart {
             while (true) {
 
                 String s = scanner.nextLine();
-                byte [] bytes={65,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31};//消息
+                byte [] bytes={0x31,0x31,0x30,0x30,0x32,0x32,0x32,0x30,0x34,0x32,0x34,0x34,0x31};//消息
 
                 dataOutputStream.write(bytes);//消息
 
@@ -111,7 +111,7 @@ public class ClientStart {
      */
     private static void socketTest(String json,int type) {
         try {
-            Socket socket = new Socket("127.0.0.1", 8089);
+            Socket socket = new Socket("127.0.0.1", 9001);
 
             OutputStream outputStream = socket.getOutputStream();
             //String json="{'haha':'1'}";

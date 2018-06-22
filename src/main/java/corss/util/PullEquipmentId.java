@@ -18,7 +18,7 @@ public class PullEquipmentId extends Thread {
     public void run() {
         try {
             //等服务器启动2分钟后取设备id
-            Thread.sleep(TimeUnit.MINUTES.toMillis(2));
+            Thread.sleep(TimeUnit.MINUTES.toMillis(1));
             //构建协议
             UART uart = new EquipmentSendUART();
             uart.parse();

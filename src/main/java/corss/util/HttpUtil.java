@@ -25,6 +25,9 @@ public abstract class HttpUtil {
      * @return
      */
     public static String httpRequest(String requestUrl, String requestMethod, String outputStr) {
+        if(logger.isDebugEnabled()){
+            logger.debug("web端接口调用[url:"+requestUrl+"][param:"+outputStr+"]");
+        }
         StringBuffer buffer = new StringBuffer();
         HttpURLConnection conn = null;
         try {
@@ -40,7 +43,6 @@ public abstract class HttpUtil {
                 os.write(outputStr.getBytes("utf-8"));
                 os.close();
             }
-
             //读取服务器端返回的内容
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is, "utf-8");

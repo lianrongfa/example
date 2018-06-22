@@ -22,9 +22,7 @@ public class SettingController extends AbstractController {
     @Override
     public String executor() {
         if (info instanceof RemoteSettingRecUART) {
-            RemoteSettingRecUART faultUART = (RemoteSettingRecUART) this.info;
-
-            JSONObject o = (JSONObject)JSONObject.toJSON(faultUART);
+            JSONObject o = (JSONObject)JSONObject.toJSON(this.info);
             o.put("assetId",getId());
             //o.put("assetId","1");
             String msg = o.toJSONString();

@@ -28,6 +28,7 @@ public class ProtocolFactory {
         map.put((byte) 101,RemoteSettingSendUART.class);
         map.put((byte) 71,RecSeerUART.class);
         map.put((byte) 102,SendSeerUART.class);
+        map.put((byte) 103,ReplyUART.class);
     }
 
     public static UART createUART(byte mark,byte [] data){

@@ -22,7 +22,9 @@ public class SimpleFactory {
         controllerMap.put((byte) 67,FaultController.class);
         controllerMap.put((byte) 70,ChannelController.class);
         controllerMap.put((byte) 71,ForwardController.class);
+        controllerMap.put((byte) 68,JobHistoryController.class);
         controllerMap.put((byte) 69,SettingController.class);
+        controllerMap.put((byte) 106,WorkUserController.class);
     }
 
     public static Controller createController(ChannelHandlerContext ctx, UART uart){

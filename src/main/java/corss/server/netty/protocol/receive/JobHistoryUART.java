@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Created by lianrongfa on 2018/5/22.
- * 详细作业记录上传(共55B)
+ * 详细作业记录上传(共98B)
  */
 public class JobHistoryUART extends AbstractUART {
 
@@ -151,7 +151,7 @@ public class JobHistoryUART extends AbstractUART {
         return !s.contains(" ");
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         byte[] bytes = {68,0x30,0x31,0x38,0x30,0x35,0x32,0x32,0x30,0x34,0x32,0x33,0x34,0x31,
                 0x20,0x20,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
                 0x30,0x34,0x32,0x33,0x34,0x31,0x30,0x34,0x32,0x33,0x34,0x31,
@@ -167,63 +167,173 @@ public class JobHistoryUART extends AbstractUART {
         uart.parse();
         System.out.println();
 
+    }*/
+
+    public static String[] getFieldNames() {
+        return fieldNames;
+    }
+
+    public static void setFieldNames(String[] fieldNames) {
+        JobHistoryUART.fieldNames = fieldNames;
     }
 
     public Date getAdvance() {
         return advance;
     }
 
+    public void setAdvance(Date advance) {
+        this.advance = advance;
+    }
+
     public Date getMarchOut() {
         return marchOut;
+    }
+
+    public void setMarchOut(Date marchOut) {
+        this.marchOut = marchOut;
     }
 
     public Date getStartAlert() {
         return startAlert;
     }
 
+    public void setStartAlert(Date startAlert) {
+        this.startAlert = startAlert;
+    }
+
     public Date getEndAlert() {
         return endAlert;
+    }
+
+    public void setEndAlert(Date endAlert) {
+        this.endAlert = endAlert;
     }
 
     public Date getStartAOff() {
         return startAOff;
     }
 
+    public void setStartAOff(Date startAOff) {
+        this.startAOff = startAOff;
+    }
+
     public Date getEndAOff() {
         return endAOff;
+    }
+
+    public void setEndAOff(Date endAOff) {
+        this.endAOff = endAOff;
     }
 
     public Date getStartBOff() {
         return startBOff;
     }
 
+    public void setStartBOff(Date startBOff) {
+        this.startBOff = startBOff;
+    }
+
     public Date getEndBOff() {
         return endBOff;
+    }
+
+    public void setEndBOff(Date endBOff) {
+        this.endBOff = endBOff;
     }
 
     public Date getStartReach() {
         return startReach;
     }
 
+    public void setStartReach(Date startReach) {
+        this.startReach = startReach;
+    }
+
     public Date getEndReach() {
         return endReach;
+    }
+
+    public void setEndReach(Date endReach) {
+        this.endReach = endReach;
     }
 
     public Date getStartAOn() {
         return startAOn;
     }
 
+    public void setStartAOn(Date startAOn) {
+        this.startAOn = startAOn;
+    }
+
     public Date getEndAOn() {
         return endAOn;
+    }
+
+    public void setEndAOn(Date endAOn) {
+        this.endAOn = endAOn;
     }
 
     public Date getStartBOn() {
         return startBOn;
     }
 
+    public void setStartBOn(Date startBOn) {
+        this.startBOn = startBOn;
+    }
+
     public Date getEndBOn() {
         return endBOn;
     }
 
+    public void setEndBOn(Date endBOn) {
+        this.endBOn = endBOn;
+    }
 
+    public char getAdvanceState() {
+        return advanceState;
+    }
+
+    public void setAdvanceState(char advanceState) {
+        this.advanceState = advanceState;
+    }
+
+    public char getMarchOutState() {
+        return marchOutState;
+    }
+
+    public void setMarchOutState(char marchOutState) {
+        this.marchOutState = marchOutState;
+    }
+
+    public char getAlertState() {
+        return alertState;
+    }
+
+    public void setAlertState(char alertState) {
+        this.alertState = alertState;
+    }
+
+    public char getOffState() {
+        return offState;
+    }
+
+    public void setOffState(char offState) {
+        this.offState = offState;
+    }
+
+    public char getReachState() {
+        return reachState;
+    }
+
+    public void setReachState(char reachState) {
+        this.reachState = reachState;
+    }
+
+    public char getOnState() {
+        return onState;
+    }
+
+    public void setOnState(char onState) {
+        this.onState = onState;
+    }
 }

@@ -1,16 +1,15 @@
 package corss.clientn;
 
-import cn.jtv.cross.SocketClient;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import corss.server.netty.protocol.receive.RemoteSettingRecUART;
-import corss.server.netty.protocol.send.RemoteSettingSendUART;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 
@@ -24,17 +23,45 @@ public class PropertiesTest {
         /*String json="{\"assetId\":\"694\",\"closeRecord\":\"0\",\"dataUpload\":\"0\",\"dataUploadType\":\"0\",\"earlyWarning\":\"0\",\"fault\":\"0\",\"guardState\":\"1\",\"handrailType\":\"0\",\"marchOut\":\"0\",\"oneTwoLine\":\"0\",\"peacetimeState\":\"1\",\"reviseTime\":\"1\",\"voiceState\":\"1\"}";
         RemoteSettingSendUART remoteSettingSendUART = JSONObject.parseObject(json, RemoteSettingSendUART.class);
         System.out.println();*/
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
-        System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
+        //System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
 
+        ThreadDemo threadDemo = new ThreadDemo();
+
+        threadDemo.start();
+
+        threadDemo.test();
+
+        System.out.println(Thread.currentThread().getName());
+
+
+    }
+    static class ThreadDemo extends Thread{
+        @Override
+        public void run() {
+            while (true){
+                try {
+                    Thread.sleep(1000);
+                    System.out.println(Thread.currentThread().getName());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void test(){
+            System.out.println(Thread.currentThread().getName());
+        }
+    }
+    private static void fileDemo() throws IOException {
+        File file = new File("C:\\Users\\lianrongfa\\Desktop\\架构篇之nginx+openresty资料\\00.readme.txt");
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
+
+
+        String line=null;
+
+        while ((line=bufferedReader.readLine())!=null){
+            System.out.println(line);
+        }
     }
 
     private static void map() {

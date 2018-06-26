@@ -5,40 +5,37 @@ import corss.server.netty.protocol.UART;
 import corss.server.netty.protocol.send.EquipmentSendUART;
 import io.netty.channel.Channel;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lianrongfa on 2018/6/13.
  */
-public class PullEquipmentId extends Thread {
+public class PullEquipmentId implements Runnable {
 
-    private volatile boolean isRunning = true;
+    private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
 
+    private final UART uart = new EquipmentSendUART();
+    {
+        //构建协议
+        uart.parse();
+    }
     @Override
     public void run() {
-        try {
-            //等服务器启动2分钟后取设备id
-            Thread.sleep(TimeUnit.MINUTES.toMillis(1));
-            //构建协议
-            UART uart = new EquipmentSendUART();
-            uart.parse();
-            //取设备id
-            while (isRunning) {
-                Thread.sleep(5000);
-                for (Channel channel : NettyContainer.group) {
-                    String s = NettyContainer.sourceIds.get(channel);
-                    if (s == null || "".equals(s)) {
-                        if (channel.isActive()) {
-                            channel.writeAndFlush(uart.getData());
-                        }
-
-                    }
+        //取设备id
+        for (Channel channel : NettyContainer.group) {
+            String s = NettyContainer.sourceIds.get(channel);
+            if (s == null || "".equals(s)) {
+                if (channel.isActive()) {
+                    channel.writeAndFlush(uart.getData());
                 }
+
             }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
+    }
 
+    public void executor() {
+        scheduledThreadPool.scheduleWithFixedDelay(this, 60000, 10000, TimeUnit.MILLISECONDS);
     }
 }

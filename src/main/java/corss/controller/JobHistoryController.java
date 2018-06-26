@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created by lianrongfa on 2018/5/21.
+ * Created by lianrongfa on 2018/6/21.
  * 详细作业记录
  */
 public class JobHistoryController extends AbstractController {

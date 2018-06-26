@@ -8,7 +8,7 @@ import corss.util.HttpUtil;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * Created by lianrongfa on 2018/5/21.
+ * Created by lianrongfa on 2018/6/21.
  * 同步岗位人员
  */
 public class WorkUserController extends AbstractController {

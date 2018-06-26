@@ -48,7 +48,8 @@ public class ConfigContext {
 
     private ConfigContext(){
         load();
-        new PullEquipmentId().start();
+        //设备id自动维护
+        new PullEquipmentId().executor();
     }
 
     /**

@@ -74,7 +74,6 @@ public class UARTDecoder extends ByteToMessageDecoder {
      * @return
      */
     private boolean isSupport(ConfigContext instace, byte mark) {
-        return instace.getProtocolConfig().getReceiveContainer().contains(mark) ||
-                mark == ConstantValue.HEAD_DATA;
+        return instace.getProtocolConfig().getReceiveContainer().contains(mark);
     }
 }

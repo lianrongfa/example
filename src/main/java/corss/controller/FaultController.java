@@ -24,9 +24,15 @@ public class FaultController extends AbstractController{
             FaultUART faultUART = (FaultUART) this.info;
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("proEquipmentNum",getId());
-            jsonObject.put("proType",this.info.getMarkString());
-            jsonObject.put("eq26",faultUART.getFaultTime());
+            jsonObject.put("proEquipmentNum",getId());//设备id
+            jsonObject.put("proType",this.info.getMarkString());//故障类型
+            jsonObject.put("eq26",faultUART.getFaultTime());//故障时间
+
+            if(faultUART.getData().length==24){
+                jsonObject.put("eq1",faultUART.getEq1());//超时时长
+                jsonObject.put("checkPreson",faultUART.getCheckPreson());//道口主人员
+                jsonObject.put("reviewPerson",faultUART.getReviewPerson());//道口副人员
+            }
 
             String msg = jsonObject.toJSONString();
             msg="faultJson="+msg;

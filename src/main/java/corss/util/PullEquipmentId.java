@@ -16,11 +16,7 @@ public class PullEquipmentId implements Runnable {
 
     private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
 
-    private final UART uart = new EquipmentSendUART();
-    {
-        //构建协议
-        uart.parse();
-    }
+    private final byte [] uart=new byte[]{100,0x31,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20};
     @Override
     public void run() {
         //取设备id
@@ -28,7 +24,7 @@ public class PullEquipmentId implements Runnable {
             String s = NettyContainer.sourceIds.get(channel);
             if (s == null || "".equals(s)) {
                 if (channel.isActive()) {
-                    channel.writeAndFlush(uart.getData());
+                    channel.writeAndFlush(uart);
                 }
 
             }

@@ -1,21 +1,19 @@
 package corss.ui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
+import javax.swing.*;
 
 
 public class Monitor extends JFrame {
-	private JTextField textField;
-	private JTextField textField_1;
+
+	//详细数据
+	private DefaultListModel<String> dml;
+
 	public Monitor() {
 		init();
 		windowClose();
@@ -51,15 +49,30 @@ public class Monitor extends JFrame {
 
 		//状态总数据
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.ORANGE);
 		panel.add(panel_1,BorderLayout.NORTH);
 		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		//详细数据
 		JPanel panel_2 = new JPanel();
-		panel.add(panel_2,BorderLayout.SOUTH);
+		panel_2.setBackground(Color.PINK);
+		panel_2.setLayout(new BorderLayout(5, 5));
+		panel.add(panel_2,BorderLayout.CENTER);
 		
-		
-	
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVisible(true);
+		//scrollPane.setSize(null);
+
+		panel_2.add(scrollPane,BorderLayout.CENTER);
+
+		setDml(new DefaultListModel<String>());
+		getDml().add(0,"a");
+		getDml().add(1,"b");
+		getDml().add(2,"c");
+
+		JList list = new JList(new String[]{"1","2","1","2","1","2"});
+
+		scrollPane.add(list);
 
 	}
 
@@ -84,5 +97,17 @@ public class Monitor extends JFrame {
 
 		JMenu menu = new JMenu("菜单");
 		menuBar.add(menu);
+		
+		JButton button = new JButton("关于");
+		menu.add(button);
+
+	}
+
+	public DefaultListModel<String> getDml() {
+		return dml;
+	}
+
+	public void setDml(DefaultListModel<String> dml) {
+		this.dml = dml;
 	}
 }

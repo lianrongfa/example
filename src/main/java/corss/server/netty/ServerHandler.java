@@ -43,6 +43,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         NettyContainer.sourceIds.remove(channel);
         NettyContainer.sourceChannels.remove(id);
 
+        NettyContainer.warnSet.add(id);
         logger.warn("设备："+id+" 与服务端连接关闭...");
     }
 

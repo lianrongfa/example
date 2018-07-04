@@ -1,13 +1,12 @@
 package corss.configuration;
 
 import corss.clientn.PropertiesTest;
+import corss.ui.Monitor;
 import corss.util.PullEquipmentId;
+import corss.util.UiTimedTask;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -18,6 +17,8 @@ public class ConfigContext {
     private static Properties properties;
 
     private static ProtocolConfig protocolConfig=new ProtocolConfig();
+
+    private Monitor monitor;
 
     static {
 
@@ -50,6 +51,8 @@ public class ConfigContext {
         load();
         //设备id自动维护
         new PullEquipmentId().executor();
+        //ui
+        new UiTimedTask().executor();
     }
 
     /**
@@ -94,6 +97,11 @@ public class ConfigContext {
     }
 
 
+    public Monitor getMonitor() {
+        return monitor;
+    }
 
-
+    public void setMonitor(Monitor monitor) {
+        this.monitor = monitor;
+    }
 }

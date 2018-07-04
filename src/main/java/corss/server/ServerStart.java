@@ -3,6 +3,7 @@ package corss.server;
 import corss.configuration.ConfigContext;
 import corss.server.netty.NettyServer;
 import corss.server.socket.SocketServer;
+import corss.ui.Monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +16,13 @@ public class ServerStart {
 
     public static void main(String[] args){
         try {
-            NettyServer server = new NettyServer(ConfigContext.getInstace().getServerPort());
-            SocketServer socketServer = new SocketServer(ConfigContext.getInstace().getSocketPort());
+            ConfigContext instace = ConfigContext.getInstace();
+            //netty
+            NettyServer server = new NettyServer(instace.getServerPort());
+            //web
+            SocketServer socketServer = new SocketServer(instace.getSocketPort());
+            //ui
+            instace.setMonitor(new Monitor());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("server start error.. ");

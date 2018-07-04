@@ -6,12 +6,8 @@ import corss.server.netty.protocol.receive.RemoteSettingRecUART;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
-
 
 
 /**
@@ -25,41 +21,56 @@ public class PropertiesTest {
         System.out.println();*/
         //System.out.println(SocketClient.sendMsg("127.0.0.1",9001,"{'equipmentId':'1002'}",3));
 
-        ThreadDemo threadDemo = new ThreadDemo();
 
-        threadDemo.start();
+        Vector<MyVector<String>> vector = new Vector<MyVector<String>>();
+        MyVector.sortIdx=1;
+        MyVector.sortType=true;
+        for (int i = 0; i < 10; i++) {
+            MyVector<String> objects = new MyVector<String>();
+            objects.add(String.valueOf(i));
+            objects.add("name:"+String.valueOf(i));
+            vector.add(objects);
+        }
 
-        threadDemo.test();
 
-        System.out.println(Thread.currentThread().getName());
+        Collections.sort(vector);
 
 
+        System.out.println();
     }
-    static class ThreadDemo extends Thread{
+
+    static class MyVector<T> extends Vector<T> implements Comparable<MyVector<String>> {
+
+        public volatile static int sortIdx;
+
+        /**
+         * 排序类型 true:降序  false:升序
+         */
+        public volatile static boolean sortType=true;
+
         @Override
-        public void run() {
-            while (true){
-                try {
-                    Thread.sleep(1000);
-                    System.out.println(Thread.currentThread().getName());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        public int compareTo(MyVector<String> myVector) {
+            String s1 = this.get(sortIdx).toString();
+            String s2 = myVector.get(sortIdx);
+
+            int i = s1.compareTo(s2);
+            if(sortType)
+            {
+                return i;
+            }else{
+                return -i;
             }
         }
-
-        public void test(){
-            System.out.println(Thread.currentThread().getName());
-        }
     }
+
     private static void fileDemo() throws IOException {
         File file = new File("C:\\Users\\lianrongfa\\Desktop\\架构篇之nginx+openresty资料\\00.readme.txt");
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"gb2312"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "gb2312"));
 
 
-        String line=null;
+        String line = null;
 
-        while ((line=bufferedReader.readLine())!=null){
+        while ((line = bufferedReader.readLine()) != null) {
             System.out.println(line);
         }
     }
@@ -67,9 +78,9 @@ public class PropertiesTest {
     private static void map() {
         HashMap<String, String> map = new HashMap<>();
 
-        System.out.println(map.put("1",null));
-        System.out.println(map.put("1","1"));
-        System.out.println(map.put("1","2"));
+        System.out.println(map.put("1", null));
+        System.out.println(map.put("1", "1"));
+        System.out.println(map.put("1", "2"));
         System.out.println(map.get("1"));
 
         /*System.out.println(map.putIfAbsent("2","3"));
@@ -101,14 +112,14 @@ public class PropertiesTest {
     private static void test32() {
         RemoteSettingRecUART remoteSettingRecUART = new RemoteSettingRecUART();
 
-        byte[] bytes ={69,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,
-                     0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
-                    ,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30
-                    };
+        byte[] bytes = {69, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
+                0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30
+                , 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30
+        };
         remoteSettingRecUART.setData(bytes);
         remoteSettingRecUART.parse();
 
-        JSONObject o = (JSONObject)JSONObject.toJSON(remoteSettingRecUART);
+        JSONObject o = (JSONObject) JSONObject.toJSON(remoteSettingRecUART);
 
 
         System.out.println(JSONObject.toJSONString(remoteSettingRecUART));
@@ -118,7 +129,7 @@ public class PropertiesTest {
         try {
             Field a = Aa.class.getDeclaredField("a");
             Aa aa = new Aa();
-            aa.setA((char)48);
+            aa.setA((char) 48);
 
             a.setAccessible(true);
             Object o = a.get(aa);
@@ -131,20 +142,20 @@ public class PropertiesTest {
         }
     }
 
-    public static void jjj(String s){
-        int i=1/0;
+    public static void jjj(String s) {
+        int i = 1 / 0;
     }
 
     private static void test3() {
-        String s1="      ";
-        String regex="\\s+";
+        String s1 = "      ";
+        String regex = "\\s+";
         boolean matches = Pattern.matches(regex, s1);
         System.out.println(matches);
         byte[] bytes = s1.getBytes();
         System.out.println();
     }
 
-    static class Aa extends Aaa{
+    static class Aa extends Aaa {
         private char a;
 
         public char getA() {
@@ -155,7 +166,8 @@ public class PropertiesTest {
             this.a = a;
         }
     }
-    static class Aaa implements Comparable<Aaa>{
+
+    static class Aaa implements Comparable<Aaa> {
         private int b;
         private char c;
 
@@ -177,26 +189,27 @@ public class PropertiesTest {
 
         @Override
         public int compareTo(Aaa o) {
-            if(this.b>o.getB()){
+            if (this.b > o.getB()) {
                 return 1;
-            }else if(b<o.getB()){
+            } else if (b < o.getB()) {
                 return -1;
             }
             return 0;
         }
     }
+
     private static void test2() {
-        char a=' ';
+        char a = ' ';
 
         try {
-            System.out.println(new String(new byte[]{0x31,0x38,0x30,0x35,0x32,0x32},"US-ASCII"));
+            System.out.println(new String(new byte[]{0x31, 0x38, 0x30, 0x35, 0x32, 0x32}, "US-ASCII"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
     private static void tset2() {
-        String s="180522052441";
+        String s = "180522052441";
 
         //Integer integer = Integer.valueOf(s,16);
 
@@ -223,7 +236,7 @@ public class PropertiesTest {
             String property = properties.getProperty("receive.container");
             String[] split = property.split(",");
 
-            for (String item:split){
+            for (String item : split) {
 
                 Byte aByte = Byte.valueOf(item);
                 System.out.println(aByte);

@@ -38,6 +38,9 @@ public class ChannelController extends AbstractController {
                 }
                 sourceChannels.put(idString,c);
                 sourceIds.put(c,idString);
+
+                NettyContainer.warnSet.remove(idString);
+
                 logger.info("设备："+idString+" 与通道关联成功.");
             }
         }

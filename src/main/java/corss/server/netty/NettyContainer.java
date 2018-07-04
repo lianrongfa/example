@@ -6,7 +6,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,6 +29,11 @@ public class NettyContainer {
      */
     public final static Map<String,Channel> sourceChannels=new ConcurrentHashMap<String,Channel>();
 
+
+    /**
+     * 通道断开集合
+     */
+    public final static Set<String> warnSet= Collections.synchronizedSet(new HashSet<String>());
 
 
 }

@@ -1,7 +1,6 @@
 package corss.ui;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -15,7 +14,7 @@ public class ChannelState extends AbstractTableModel {
 
     final String[] columnNames = {"设备id","通道状态"};
 
-    private Vector<List<String>> vector=new Vector<List<String>>();
+    private volatile Vector<SortVector<String>> vector=new Vector<SortVector<String>>();
 
     public ChannelState() {
 
@@ -50,8 +49,9 @@ public class ChannelState extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int row, int column) {
-        if (!vector.isEmpty())
-            return ((Vector<String>) vector.elementAt(row))
+
+        if (vector!=null&&!vector.isEmpty())
+            return ((SortVector<String>) vector.elementAt(row))
                     .elementAt(column);
         else
             return null;
@@ -60,10 +60,17 @@ public class ChannelState extends AbstractTableModel {
     /**
      * 得到指定列的数据类型
      */
-    /*@Override
-    public Class<?> getColumnClass(int columnIndex) {
-        return data[0][columnIndex].getClass();
-    }*/
+    @Override
+    public Class getColumnClass(int column) {
+        Class returnValue;
+        if ((column >= 0) && (column < getColumnCount())) {
+            returnValue = getValueAt(0, column).getClass();
+        } else {
+            returnValue = Object.class;
+        }
+        //System.out.println(returnValue);
+        return returnValue;
+    }
 
     /**
      * 指定设置数据单元是否可编辑.这里设置"姓名","学号"不可编辑
@@ -87,7 +94,11 @@ public class ChannelState extends AbstractTableModel {
     }*/
 
 
-    public Vector<List<String>> getVector() {
+    public Vector<SortVector<String>> getVector() {
         return vector;
+    }
+
+    public void setVector(Vector<SortVector<String>> vector) {
+        this.vector = vector;
     }
 }

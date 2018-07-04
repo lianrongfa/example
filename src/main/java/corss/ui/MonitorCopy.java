@@ -1,5 +1,6 @@
 package corss.ui;
 
+import corss.ui.data.ChannelState;
 import corss.ui.data.ChannelTableModel;
 
 import javax.swing.*;
@@ -9,27 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Random;
 import java.util.Vector;
 
-
-public class Monitor extends JFrame {
-    //表格头部
-    private final Vector title = new Vector();
-    //表格数据
-    private Vector<Vector> tableData = new Vector<Vector>();
-
-    {
-        title.add("设备id");
-        title.add("通道状态");
-        //title.add("设备id");
-        //title.add("设备id");
-    }
+public class MonitorCopy extends JFrame {
 
     //详细数据
-    private ChannelTableModel dml = new ChannelTableModel(tableData, title);
-    //排序
-    private TableRowSorter sorter = new TableRowSorter<ChannelTableModel>(dml);
-    private JTable jTable = new JTable(dml);
+    private JTable jTable = new JTable();
 
     //设备总数量
     private JLabel countNum;
@@ -39,25 +26,94 @@ public class Monitor extends JFrame {
     private JLabel uncheckedNum;
     //异常通道数量
     private JLabel warnNum;
+    private TableRowSorter sorter;
 
-    public Monitor() {
+    public MonitorCopy() {
 
         init();
         windowClose();
-        //添加排序
-        jTable.setRowSorter(sorter);
 
         setVisible(true);
+    }
+
+    public static void main(String args[]) {
+        final MonitorCopy monitor = new MonitorCopy();
+
+        final Random random = new Random();
+
+        final Vector datas = getVector(random, 30);
+        Vector<Object> objects = new Vector<>();
+        objects.add("1");
+        objects.add("2");
+
+        final ChannelTableModel model =new ChannelTableModel(datas, objects);
+
+        monitor.sorter = new TableRowSorter(model);
+        monitor.getjTable().setModel(model);
+        monitor.getjTable().setRowSorter(monitor.sorter);
+
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int size = 30;
+
+
+                while (true) {
+                    try {
+                        Thread.sleep(5000);
+
+
+                        Vector<Object> objectVector = new Vector<>();
+                        objectVector.add(size);
+                        objectVector.add("state:"+size);
+                        datas.add(objectVector);
+
+                        String[] strings = {"123", "456"};
+
+
+                        monitor.getjTable().updateUI();
+
+                        size++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }).start();*/
+        monitor.getjTable().updateUI();
 
     }
 
-    /*public static void main(String args[]) {
-        Monitor monitor = new Monitor();
+    private static Object[][] getObjects(Random random, int size) {
+        Vector<ChannelState> sortVectors = new Vector<>();
+        for (int i = 0; i < size; i++) {
+            ChannelState strings = new ChannelState();
+            strings.setNum(i);
 
-        Random random = new Random();
-        Vector<SortVector> sortVectors = new Vector<>();
-        for (int i = 0; i < 50; i++) {
-            SortVector strings = new SortVector<>();
+            int i1 = random.nextInt(2);
+            if (i1 == 1) {
+                strings.setState(ChannelState.CHANNEL_RUNNING);
+            } else {
+                strings.setState(ChannelState.CHANNEL_CLOSED);
+            }
+            sortVectors.add(strings);
+        }
+
+        Object[][] datas = new Object[sortVectors.size()][ChannelState.SIZE];
+
+        for (int i = 0; i < datas.length; i++) {
+            ChannelState channelState = sortVectors.get(i);
+            datas[i][0] = channelState.getNum();
+            datas[i][1] = channelState.getState();
+        }
+        return datas;
+    }
+
+    private static Vector getVector(Random random, int size) {
+        Vector<Vector> sortVectors = new Vector<>();
+        for (int i = 0; i < size; i++) {
+            Vector<Object> strings = new Vector<>();
             strings.add(i);
 
             int i1 = random.nextInt(2);
@@ -68,11 +124,8 @@ public class Monitor extends JFrame {
             }
             sortVectors.add(strings);
         }
-        RowSorter sorter = new TableRowSorter(monitor.getDml());
-        monitor.getjTable().setRowSorter(sorter);
-        monitor.getDml().setVector(sortVectors);
-        monitor.getjTable().updateUI();
-    }*/
+        return sortVectors;
+    }
 
     /**
      * 窗口关闭
@@ -95,6 +148,7 @@ public class Monitor extends JFrame {
         menuInit(this);
 
         dataUiInit(this);
+
     }
 
     /**
@@ -170,11 +224,11 @@ public class Monitor extends JFrame {
                 }
             }
         });
-
+        
         jPanel.add(button);
 
-        panel_2.add(jPanel, BorderLayout.NORTH);
-        panel_2.add(scrollPane, BorderLayout.CENTER);
+        panel_2.add(jPanel,BorderLayout.NORTH);
+        panel_2.add(scrollPane,BorderLayout.CENTER);
 
 
         panel.add(panelDetail);
@@ -188,7 +242,6 @@ public class Monitor extends JFrame {
     private void layoutInit(JFrame jFrame) {
         jFrame.setTitle("道口通道监控");
         jFrame.setSize(600, 700);
-        jFrame.setVisible(true);
         jFrame.setLocationRelativeTo(null);
     }
 
@@ -216,10 +269,6 @@ public class Monitor extends JFrame {
 
     public void setjTable(JTable jTable) {
         this.jTable = jTable;
-    }
-
-    public Vector<Vector> getTableData() {
-        return tableData;
     }
 
     public JLabel getCountNum() {

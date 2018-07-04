@@ -23,7 +23,7 @@ public class ChannelController extends AbstractController {
     }
 
     @Override
-    public String executor() {
+    public synchronized String executor() {
 
         if(this.info instanceof EquipmentRecUART) {
             String idString = this.info.getIdString();

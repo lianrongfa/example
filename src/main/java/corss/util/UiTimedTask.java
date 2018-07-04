@@ -20,14 +20,15 @@ import java.util.concurrent.TimeUnit;
 public class UiTimedTask implements Runnable{
     private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
 
-    private volatile Vector<SortVector<String>> vector=new Vector<SortVector<String>>();
+    private Vector<Vector> vector=null;
 
     @Override
     public void run() {
         Monitor monitor = ConfigContext.getInstace().getMonitor();
+        vector=monitor.getTableData();
 
         //已注册通道数量
-        int registerNum = NettyContainer.sourceChannels.size();
+        int registerNum = NettyContainer.sourceIds.size();
         //未注册通道数量
         int uncheckedNum= NettyContainer.group.size()-registerNum;
         //异常通道数量
@@ -41,26 +42,25 @@ public class UiTimedTask implements Runnable{
 
         for (Map.Entry<String, Channel> entry : NettyContainer.sourceChannels.entrySet()) {
             String key = entry.getKey();
-            buildData(key,ChannelState.CHANNEL_RUNNING);
+            buildData(Integer.parseInt(key),ChannelState.CHANNEL_RUNNING);
         }
 
         for (String key : NettyContainer.warnSet) {
-            buildData(key,ChannelState.CHANNEL_CLOSED);
+            buildData(Integer.parseInt(key),ChannelState.CHANNEL_CLOSED);
 
         }
 
         //刷新数据
-        monitor.getDml().setVector(this.vector);
         monitor.getjTable().updateUI();
     }
 
-    private void buildData(String key,String state) {
+    private void buildData(int key,String state) {
         boolean b=true;
-        SortVector<String> sortVector=null;
+        Vector sortVector=null;
         //检验是否已经存在显示数据中，如果存在则更新，不存在则新增
-        for (SortVector<String> strings : vector) {
-            String s = strings.get(0);
-            if(s.equals(key)){
+        for (Vector strings : vector) {
+            int i = Integer.parseInt(strings.get(0).toString());
+            if(i==key){
                 b=false;
                 sortVector=strings;
                 break;
@@ -68,7 +68,7 @@ public class UiTimedTask implements Runnable{
         }
 
         if(b){
-            sortVector = new SortVector<String>();
+            sortVector = new Vector();
             sortVector.add(key);
             sortVector.add(state);
             vector.add(sortVector);

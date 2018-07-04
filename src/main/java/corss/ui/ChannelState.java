@@ -14,7 +14,7 @@ public class ChannelState extends AbstractTableModel {
 
     final String[] columnNames = {"设备id","通道状态"};
 
-    private volatile Vector<SortVector<String>> vector=new Vector<SortVector<String>>();
+    private volatile Vector<SortVector> vector=new Vector<SortVector>();
 
     public ChannelState() {
 
@@ -94,11 +94,11 @@ public class ChannelState extends AbstractTableModel {
     }*/
 
 
-    public Vector<SortVector<String>> getVector() {
+    public Vector<SortVector> getVector() {
         return vector;
     }
 
-    public void setVector(Vector<SortVector<String>> vector) {
+    public void setVector(Vector<SortVector> vector) {
         this.vector = vector;
     }
 }

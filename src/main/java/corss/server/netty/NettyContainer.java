@@ -1,6 +1,7 @@
 package corss.server.netty;
 
 import com.alibaba.fastjson.JSONObject;
+import corss.ui.data.ChannelState;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -31,9 +32,12 @@ public class NettyContainer {
 
 
     /**
-     * 通道断开集合
+     * 通道断开设备id集合
      */
     public final static Set<String> warnSet= Collections.synchronizedSet(new HashSet<String>());
 
-
+    /**
+     * ui展示数据
+     */
+    public final static Map<String,ChannelState> uiData=new ConcurrentHashMap<String,ChannelState>();
 }

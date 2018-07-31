@@ -14,6 +14,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 定时刷新ui显示的数据
+ *
  * @author lianrongfa
  * @date 2018/7/3
  */

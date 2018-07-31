@@ -4,12 +4,14 @@ import corss.ui.data.ChannelState;
 import corss.ui.data.ChannelTableModel;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
@@ -41,12 +43,20 @@ public class MonitorCopy extends JFrame {
 
         final Random random = new Random();
 
-        final Vector datas = getVector(random, 30);
+        //final Vector datas = getVector(random, 30);
+
+        Vector<Vector> objects1 = getObjects(random, 30);
+
         Vector<Object> objects = new Vector<>();
         objects.add("1");
         objects.add("2");
+        objects.add("1");
+        objects.add("2");
 
-        final ChannelTableModel model =new ChannelTableModel(datas, objects);
+        final ChannelTableModel model =new ChannelTableModel(objects1, objects);
+
+
+        //DefaultTableModel model = new DefaultTableModel(objects1, objects);
 
         monitor.sorter = new TableRowSorter(model);
         monitor.getjTable().setModel(model);
@@ -85,8 +95,10 @@ public class MonitorCopy extends JFrame {
 
     }
 
-    private static Object[][] getObjects(Random random, int size) {
-        Vector<ChannelState> sortVectors = new Vector<>();
+    private static Vector<Vector> getObjects(Random random, int size) {
+
+        Vector<Vector> vectors = new Vector<>();
+
         for (int i = 0; i < size; i++) {
             ChannelState strings = new ChannelState();
             strings.setNum(i);
@@ -97,17 +109,21 @@ public class MonitorCopy extends JFrame {
             } else {
                 strings.setState(ChannelState.CHANNEL_CLOSED);
             }
-            sortVectors.add(strings);
+            strings.setRegisterTime(new Date());
+            strings.setWarnTime(new Date());
+
+            Vector<Object> objects = new Vector<>();
+
+            objects.addElement(strings.getNum());
+            objects.addElement(strings.getState());
+            objects.addElement(strings.getRegisterTime());
+            objects.addElement(strings.getWarnTime());
+
+            vectors.addElement(objects);
         }
 
-        Object[][] datas = new Object[sortVectors.size()][ChannelState.SIZE];
 
-        for (int i = 0; i < datas.length; i++) {
-            ChannelState channelState = sortVectors.get(i);
-            datas[i][0] = channelState.getNum();
-            datas[i][1] = channelState.getState();
-        }
-        return datas;
+        return vectors;
     }
 
     private static Vector getVector(Random random, int size) {

@@ -29,6 +29,7 @@ public class PullEquipmentId implements Runnable {
 
             }
         }
+
     }
 
     public void executor() {

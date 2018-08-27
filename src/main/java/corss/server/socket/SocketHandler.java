@@ -42,10 +42,10 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
                 Class clazz = Type.getClazz(type);
                 if(clazz!=null&&value!=null){
                     Object o = JSONObject.parseObject(value, clazz);
-                    byte[] data = new byte[0];
+                    byte[] data = null;
                     String id = null;
+                    UART uart = (UART) o;
                     try {
-                        UART uart = (UART) o;
                         uart.parse();
                         data = uart.getData();
 
@@ -62,6 +62,11 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
                     Channel channel = NettyContainer.sourceChannels.get(id);
                     if(channel!=null&&channel.isActive()){
                         channel.writeAndFlush(data);
+                        String s=null;
+                        for (byte datum : data) {
+                            s=s+datum+" ";
+                        }
+                        logger.info("服务端向设备："+ id +" 发送数据："+ s);
                         cannel.writeAndFlush("{'state':true,'msg':'操作成功！'}\r\n");
                     }else{
                         cannel.writeAndFlush("{'state':false,'msg':'设备:"+id+" 未在本系统注册！'}\r\n");

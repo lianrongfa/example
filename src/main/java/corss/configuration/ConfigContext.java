@@ -44,6 +44,13 @@ public class ConfigContext {
     private int serverPort;
     private int socketPort;
 
+    /**
+     * redis
+     */
+    private String redisServer;
+    private int redisPort;
+    public static final String CROSS_KEY="cross";
+
     //web服务器接口地址
     private String webserverUrl;
 
@@ -62,6 +69,10 @@ public class ConfigContext {
         //端口
         serverPort=Integer.valueOf(properties.getProperty("server.port","8080"));
         socketPort=Integer.valueOf(properties.getProperty("socket.port","8089"));
+
+        //redis
+        redisServer=properties.getProperty("redis.server","127.0.0.1");
+        redisPort=Integer.valueOf(properties.getProperty("redis.port","6379"));
 
         //web服务器接口地址
         webserverUrl=properties.getProperty("webserver.url");
@@ -90,6 +101,14 @@ public class ConfigContext {
 
     public int getSocketPort() {
         return socketPort;
+    }
+
+    public String getRedisServer() {
+        return redisServer;
+    }
+
+    public int getRedisPort() {
+        return redisPort;
     }
 
     public ProtocolConfig getProtocolConfig(){

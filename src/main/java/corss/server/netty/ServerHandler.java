@@ -3,7 +3,6 @@ package corss.server.netty;
 import corss.controller.Controller;
 import corss.proxy.SimpleFactory;
 import corss.server.netty.protocol.UART;
-import corss.server.netty.protocol.send.EquipmentSendUART;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -11,12 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.SocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lianrongfa on 2018/5/17.
  */
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+
+    private static final ExecutorService webExecutors = Executors.newCachedThreadPool();
+
     /**
      * 客户端与服务端创建连接的时候调用
      */

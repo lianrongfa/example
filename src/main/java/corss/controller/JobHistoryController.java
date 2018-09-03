@@ -5,24 +5,26 @@ import corss.server.netty.protocol.UART;
 import corss.server.netty.protocol.receive.JobHistoryUART;
 import corss.server.netty.protocol.receive.WorkUserUART;
 import corss.util.HttpUtil;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by lianrongfa on 2018/6/21.
  * 详细作业记录
  */
-public class JobHistoryController extends AbstractController {
+public class JobHistoryController extends ConsumerController {
 
     private final static String method = "/astassetconfig.do?method=syncDetailRecord";
 
-    public JobHistoryController(ChannelHandlerContext ctx, UART info) {
-        super(ctx, info);
+    public JobHistoryController(UART info) {
+        super(info);
     }
 
     @Override
-    public String executor() {
+    public String executor() throws Exception {
         if (info instanceof JobHistoryUART) {
             try {
                 JSONObject o = (JSONObject) JSONObject.toJSON(this.info);

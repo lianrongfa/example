@@ -4,6 +4,7 @@ import corss.configuration.ConfigContext;
 import corss.server.netty.NettyServer;
 import corss.server.socket.SocketServer;
 import corss.ui.Monitor;
+import corss.util.PushToWeb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,8 @@ public class ServerStart {
             SocketServer socketServer = new SocketServer(instace.getSocketPort());
             //ui
             instace.setMonitor(new Monitor());
+            //consumer
+            new PushToWeb().executor();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("server start error.. ");

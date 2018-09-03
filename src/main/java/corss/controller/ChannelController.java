@@ -20,8 +20,8 @@ public class ChannelController extends AbstractController {
 
     private static final Logger logger= LoggerFactory.getLogger(ChannelController.class);
 
-    public ChannelController(ChannelHandlerContext ctx, UART info) {
-        super(ctx, info);
+    public ChannelController(Channel channel, UART info) {
+        super(channel, info);
     }
 
     @Override

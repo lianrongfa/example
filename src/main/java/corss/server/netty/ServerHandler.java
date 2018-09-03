@@ -1,25 +1,25 @@
 package corss.server.netty;
 
+import com.alibaba.fastjson.JSONObject;
 import corss.controller.Controller;
 import corss.proxy.SimpleFactory;
 import corss.server.netty.protocol.UART;
+import corss.server.netty.protocol.receive.EquipmentRecUART;
+import corss.util.RedisUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 
 import java.net.SocketAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by lianrongfa on 2018/5/17.
  */
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
-
-    private static final ExecutorService webExecutors = Executors.newCachedThreadPool();
 
     /**
      * 客户端与服务端创建连接的时候调用
@@ -85,17 +85,27 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         String id = NettyContainer.sourceIds.get(channelHandlerContext.channel());
         logger.info("服务端接收到设备："+ id +" 的数据："+ uart.toString());
         //回复设备、回复信息为前两位
-        if(uart.getMark()[0]!=104){
+        if(uart.getMarks()[0]!=104){
             byte[] bytes = buildData(uart);
             channelHandlerContext.writeAndFlush(bytes);
         }
 
-        Controller controller = SimpleFactory.createController(channelHandlerContext, uart);
-        if(controller!=null){
-            controller.executor();
-        }else{
-            logger.warn("未找到对应的控制器!");
+        //如果为通道注册，则不用mq
+        if(uart instanceof EquipmentRecUART){
+            Controller controller = SimpleFactory.createController(channelHandlerContext.channel(), uart);
+            if(controller!=null){
+                controller.executor();
+            }else{
+                logger.warn("未找到对应的控制器!");
+            }
+        }else{//否则使用mq
+            String o = JSONObject.toJSONString(uart);
+            Jedis jedis = RedisUtils.getJedis();
+            jedis.lpush("cross",o);
+            jedis.close();
         }
+
+
     }
 
     private byte[] buildData(UART uart) {
@@ -104,8 +114,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             bytes[i]=0x20;
         }
         bytes[0]=104;
-        bytes[1]=uart.getMark()[0];
-        bytes[2]=uart.getMark()[1];
+        bytes[1]=uart.getMarks()[0];
+        bytes[2]=uart.getMarks()[1];
         return bytes;
     }
 }

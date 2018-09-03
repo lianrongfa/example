@@ -62,7 +62,7 @@ public class SocketHandler extends ChannelInboundHandlerAdapter {
                     Channel channel = NettyContainer.sourceChannels.get(id);
                     if(channel!=null&&channel.isActive()){
                         channel.writeAndFlush(data);
-                        String s=null;
+                        String s="";
                         for (byte datum : data) {
                             s=s+datum+" ";
                         }

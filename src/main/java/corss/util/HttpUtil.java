@@ -1,10 +1,7 @@
 package corss.util;
 
-import com.alibaba.fastjson.JSONObject;
-import corss.configuration.ConfigContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -24,7 +21,7 @@ public abstract class HttpUtil {
      * @param outputStr     参数
      * @return
      */
-    public static String httpRequest(String requestUrl, String requestMethod, String outputStr){
+    public static String httpRequest(String requestUrl, String requestMethod, String outputStr) throws Exception {
         if(logger.isDebugEnabled()){
             logger.debug("web端接口调用[url:"+requestUrl+"][param:"+outputStr+"]");
         }
@@ -35,7 +32,7 @@ public abstract class HttpUtil {
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
-            conn.setConnectTimeout(3000);
+            conn.setConnectTimeout(4000);
             conn.setRequestMethod(requestMethod);
             conn.connect();
             //往服务器端写内容 也就是发起http请求需要带的参数
@@ -56,6 +53,7 @@ public abstract class HttpUtil {
 
         } catch (Exception e) {
             logger.error("web端接口调用出错！[url:"+requestUrl+"][param:"+outputStr+"]",e);
+            throw e;
         } finally {
             if (conn != null) {
                 conn.disconnect();

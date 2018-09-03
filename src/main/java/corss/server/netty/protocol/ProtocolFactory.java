@@ -31,7 +31,7 @@ public class ProtocolFactory {
         map.put((byte) 103,ReplyUART.class);
     }
 
-    public static UART createUART(byte mark,byte [] data){
+    public static UART createUART(byte mark,byte [] data,String id){
         Class clazz = map.get(mark);
         if(clazz!=null){
             UART uart;
@@ -39,6 +39,10 @@ public class ProtocolFactory {
                 uart= (UART)clazz.newInstance();
                 uart.setData(data);
                 uart.parse();
+                if(id!=null){
+                    uart.setIdString(id);
+                }
+                uart.setMark(mark);
                 return uart;
             } catch (InstantiationException e) {
                 e.printStackTrace();
@@ -46,6 +50,12 @@ public class ProtocolFactory {
                 e.printStackTrace();
             }
         }
+        return null;
+    }
+
+    public static Class getClassByMark(Byte mark){
+        if(mark!=null)
+            return map.get(mark);
         return null;
     }
 }

@@ -2,7 +2,7 @@ package corss.proxy;
 
 import corss.controller.*;
 import corss.server.netty.protocol.UART;
-import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.Channel;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -27,16 +27,16 @@ public class SimpleFactory {
         controllerMap.put((byte) 106,WorkUserController.class);
     }
 
-    public static Controller createController(ChannelHandlerContext ctx, UART uart){
+    public static Controller createController(Channel channel, UART uart){
 
-        byte mark = uart.getMark()[0];
+        byte mark = uart.getMarks()[0];
         Class clazz = controllerMap.get(mark);
         Controller controller = null;
         if (clazz!=null){
             try {
-                Constructor constructor = clazz.getConstructor(ChannelHandlerContext.class, UART.class);
+                Constructor constructor = clazz.getConstructor(Channel.class, UART.class);
 
-                controller = (Controller) constructor.newInstance(ctx, uart);
+                controller = (Controller) constructor.newInstance(channel, uart);
 
                 ProxyController proxy = new ProxyController(controller);
 
@@ -55,4 +55,31 @@ public class SimpleFactory {
         return null;
     }
 
+    public static Controller createController(UART uart){
+
+        byte mark = uart.getMarks()[0];
+        Class clazz = controllerMap.get(mark);
+        Controller controller = null;
+        if (clazz!=null){
+            try {
+                Constructor constructor = clazz.getConstructor(UART.class);
+
+                controller = (Controller) constructor.newInstance(uart);
+
+                ProxyController proxy = new ProxyController(controller);
+
+                Controller controllerProxy = proxy.getInstace();
+                return controllerProxy;
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 }

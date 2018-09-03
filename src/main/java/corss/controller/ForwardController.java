@@ -1,34 +1,34 @@
 package corss.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import corss.server.netty.NettyContainer;
 import corss.server.netty.protocol.UART;
 import corss.server.netty.protocol.send.SendSeerUART;
 import corss.util.HttpUtil;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Created by lianrongfa on 2018/6/4.
  * 转发预告信息
  */
-public class ForwardController extends AbstractController {
+public class ForwardController extends ConsumerController {
 
     private static final Logger logger= LoggerFactory.getLogger(Controller.class);
 
 
     private final static String method = "/astassetconfig.do?method=findNextAssetId";
 
-    public ForwardController(ChannelHandlerContext ctx, UART info) {
-        super(ctx, info);
+    public ForwardController(Channel channel, UART info) {
+        super(info);
     }
 
     @Override
-    public String executor() {
+    public String executor() throws Exception{
 
-        byte b = info.getMark()[1];
+        byte b = info.getMarks()[1];
 
         String runType = null;
         if (b == '0') {

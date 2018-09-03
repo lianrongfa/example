@@ -21,7 +21,7 @@ public interface UART {
      * 得到标识位，下标为0 1
      * @return byte.length=2 , ascii原型
      */
-    byte [] getMark();
+    byte [] getMarks();
 
     /**
      * 得到标识位，下标为0 1
@@ -53,4 +53,6 @@ public interface UART {
      * @param type
      */
     void setType(char type);
+
+    void setMark(byte mark);
 }

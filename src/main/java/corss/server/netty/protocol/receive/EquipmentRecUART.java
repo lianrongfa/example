@@ -19,7 +19,7 @@ public class EquipmentRecUART extends AbstractUART {
     @Override
     public void parse() {
 
-        char markChar = (char)getMark()[1];
+        char markChar = (char) getMarks()[1];
         setType(markChar);
         if('0'==markChar){//手机号
             byte[] bytes = Arrays.copyOfRange(this.data, 2, 13);

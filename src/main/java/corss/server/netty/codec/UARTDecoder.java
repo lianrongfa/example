@@ -1,9 +1,11 @@
 package corss.server.netty.codec;
 
 import corss.configuration.ConfigContext;
+import corss.server.netty.NettyContainer;
 import corss.server.netty.protocol.*;
 import corss.server.socket.protocol.ConstantValue;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
@@ -58,7 +60,12 @@ public class UARTDecoder extends ByteToMessageDecoder {
             byte[] data = new byte[length];
             buffer.readBytes(data);
 
-            Object uart = ProtocolFactory.createUART(mark, data);
+
+            Channel channel = ctx.channel();
+
+            String id = NettyContainer.getId(channel);
+
+            Object uart = ProtocolFactory.createUART(mark, data,id);
 
 
             out.add(uart);

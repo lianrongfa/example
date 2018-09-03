@@ -5,22 +5,25 @@ import corss.server.netty.protocol.UART;
 import corss.server.netty.protocol.receive.FaultUART;
 import corss.server.netty.protocol.receive.RemoteSettingRecUART;
 import corss.util.HttpUtil;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.io.IOException;
 
 /**
  * Created by lianrongfa on 2018/5/21.
  * 设备参数接入
  */
-public class SettingController extends AbstractController {
+public class SettingController extends ConsumerController {
 
     private final static String method = "/astassetconfig.do?method=saveAstConfig";
 
-    public SettingController(ChannelHandlerContext ctx, UART info) {
-        super(ctx, info);
+    public SettingController(UART info) {
+        super(info);
     }
 
     @Override
-    public String executor() {
+    public String executor() throws Exception {
         if (info instanceof RemoteSettingRecUART) {
             JSONObject o = (JSONObject)JSONObject.toJSON(this.info);
             o.put("assetId",getId());

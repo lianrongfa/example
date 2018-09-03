@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class PullEquipmentId implements Runnable {
 
-    private final ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1);
+    public final ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
 
     private final byte [] uart=new byte[]{100,0x31,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20};
     @Override

@@ -41,7 +41,7 @@ public class ProxyController implements InvocationHandler{
             o = method.invoke(target, args);
         } catch (Exception e) {
             logger.error("控制器调用出错!",e);
-            throw new RuntimeException(e);
+            throw e;
         }
 
         //预留逻辑

@@ -1,5 +1,6 @@
 package corss.server.netty.protocol;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import corss.configuration.ConfigContext;
 import corss.configuration.ProtocolConfig;
 
@@ -15,8 +16,8 @@ public abstract class AbstractUART implements UART {
 
     //即为20xx年,如果该软件使用到了3000年，改为30一次类推，不过应该不可能~_~
     protected static final String prefix="20";
-
-    protected SimpleDateFormat yyyyMMddHHmmss =new SimpleDateFormat("yyyyMMddHHmmss");
+    @JSONField(serialize = false)
+    protected static final SimpleDateFormat yyyyMMddHHmmss =new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
      * 协议最小长度
@@ -102,7 +103,7 @@ public abstract class AbstractUART implements UART {
         this.data = data;
     }
 
-    public byte [] getMark() {
+    public byte [] getMarks() {
         if (data.length > MIN_LENGTH) {
             byte[] bytes = {data[0], data[1]};
             return bytes;
@@ -211,5 +212,14 @@ public abstract class AbstractUART implements UART {
 
     public void setEquipmentId(String equipmentId) {
         this.equipmentId = equipmentId;
+    }
+
+    @Override
+    public void setMark(byte mark) {
+        this.mark=mark;
+    }
+
+    public byte getMark() {
+        return mark;
     }
 }

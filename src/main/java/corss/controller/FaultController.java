@@ -4,22 +4,25 @@ import com.alibaba.fastjson.JSONObject;
 import corss.server.netty.protocol.UART;
 import corss.server.netty.protocol.receive.FaultUART;
 import corss.util.HttpUtil;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.io.IOException;
 
 /**
  * Created by lianrongfa on 2018/5/21.
  * 故障发生控制器
  */
-public class FaultController extends AbstractController{
+public class FaultController extends ConsumerController{
 
     private final static String method="/dkProblem.do?method=saveProblem";
 
-    public FaultController(ChannelHandlerContext ctx, UART info) {
-        super(ctx, info);
+    public FaultController(UART info) {
+        super(info);
     }
 
     @Override
-    public String executor() {
+    public String executor() throws Exception {
         if(info instanceof FaultUART){
             FaultUART faultUART = (FaultUART) this.info;
 
